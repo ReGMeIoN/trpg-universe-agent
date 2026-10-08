@@ -6,7 +6,7 @@
   —— 示例团必须能用自己的虚构 canon, 不能被生产库的铁律污染。
 - 称呼表: <work>/canon/naming.json; `canon build` 在缺失时从模板生成(不覆盖已有文件)。
 - 名单: <work>/canon/roster.json, 由 characters.json 自动生成(id/name/aliases/groups/tags)。
-- 注入块: render_canon_block() 决定每次提炼带上什么(这是跨段/跨团一致性的命门)。
+- 注入块: render_canon_block() 决定每次提炼带上什么(这是跨段一致性的命门)。
 """
 from __future__ import annotations
 
@@ -23,8 +23,6 @@ from trpg_agent.workspace import Workspace
 TEMPLATES = Path(__file__).resolve().parent.parent / "templates"
 DEFAULT_RULES = TEMPLATES / "canon_rules.md"
 DEFAULT_NAMING = TEMPLATES / "naming_production.json"
-
-CROSS_TAGS = {"跨团", "跨团常驻", "跨团主持人"}
 
 
 def rules_path(ws: Workspace) -> Path:
@@ -44,8 +42,8 @@ def group_rules_path(ws: Workspace, group: str | None) -> Path | None:
     """团专属 canon: <work>/canon/groups/<团名>.md, 只在该团提炼时注入。
 
     为什么分文件: canon_rules.md 是**全库级**规则, 会被注入到每一个团的提炼 prompt。
-    把「新团 X 的 PC 对照表」这类只对本团有效的内容塞进去, 会污染其它团的判断
-    (圣剑英雄谭那一大段历史上就写在全局文件里)。团专属内容放这里, 两不打扰。
+    把「新团 X 的 PC 对照表」这类只对本团有效的内容塞进去, 会污染其它团的判断。
+    团专属内容放这里, 两不打扰。
     """
     if not group:
         return None
@@ -96,7 +94,6 @@ def build_roster_file(ws: Workspace) -> Path:
                 "groups": c.get("groups") or [],
                 "tags": c.get("tags") or [],
                 "played_by": c.get("played_by") or "",
-                "is_cross": any(t in CROSS_TAGS for t in (c.get("tags") or [])),
             }
             for c in chars
             if isinstance(c, dict)
@@ -129,7 +126,7 @@ def render_naming_block(naming_doc: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def build_roster_block(roster: dict[str, Any], group: str | None, scope: str = "group_plus_cross") -> str:
+def build_roster_block(roster: dict[str, Any], group: str | None, scope: str = "group") -> str:
     chars = roster.get("characters", [])
     if scope == "none":
         return ""
@@ -137,13 +134,13 @@ def build_roster_block(roster: dict[str, Any], group: str | None, scope: str = "
         return "已入库角色名（共 %d，重名/同位体请复用，勿新建重复节点）：%s" % (
             len(chars), "、".join(c["name"] for c in chars if c.get("name")),
         )
-    # group_plus_cross: 本团相关 + 跨团常驻 给详情; 其余只给名字
-    detail = [c for c in chars if (group and group in (c.get("groups") or [])) or c.get("is_cross")]
+    # group: 本团相关角色给详情; 其余只给名字（去重用）
+    detail = [c for c in chars if group and group in (c.get("groups") or [])]
     detail_ids = {c["id"] for c in detail}
     others = [c["name"] for c in chars if c["id"] not in detail_ids and c.get("name")]
     lines: list[str] = []
     if detail:
-        lines.append(f"### 本团相关 / 跨团常驻角色（{len(detail)} 个，**必须复用其 id 或按规则更新，不要新建重复节点**）")
+        lines.append(f"### 本团相关角色（{len(detail)} 个，**必须复用其 id 或按规则更新，不要新建重复节点**）")
         for c in detail:
             al = "、".join(c.get("aliases") or [])
             pb = f" | 扮演:{c['played_by']}" if c.get("played_by") else ""
@@ -156,7 +153,7 @@ def build_roster_block(roster: dict[str, Any], group: str | None, scope: str = "
     return "\n".join(lines)
 
 
-def render_canon_block(ws: Workspace, group: str | None, roster_scope: str = "group_plus_cross") -> str:
+def render_canon_block(ws: Workspace, group: str | None, roster_scope: str = "group") -> str:
     parts: list[str] = []
     rp = rules_path(ws)
     if rp.is_file():

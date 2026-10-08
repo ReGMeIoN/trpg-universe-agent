@@ -150,7 +150,7 @@ extract:
   out_dir: extracts
   concurrency: 6             # 云端并发; 本地 Ollama 请改回 1
   model_route: extract       # 对应 llm.routes 的逻辑名
-  roster_scope: group_plus_cross   # 注入名单: 本团相关+跨团常驻给详情, 其余只给名字
+  roster_scope: group   # 注入名单: 本团相关角色给详情, 其余只给名字(去重参考)
   max_segment_chars: 200000
   skip_if_exists: true
   retry: 2
@@ -173,8 +173,6 @@ visualize:
   net_engine: legacy_svg   # 沿用已验证的 SVG 群像模板; echarts 待评估
   pl_wall: true
   chronicle: true
-  jack_dossier: true
-  jack_ids: [cross_jieke]
 
 export:
   kb_pack: true

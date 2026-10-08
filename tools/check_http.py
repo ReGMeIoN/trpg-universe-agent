@@ -16,13 +16,13 @@ import urllib.request
 
 ROOT_PATHS = ["/site/index.html", "/site/relations.html", "/site/data/bundle.js",
               "/site/assets/kv.jpg"]
-IMG_PATHS = ["/site/assets/cg/段1_003.jpg", "/site/assets/avatars/杰克.jpg"]
+IMG_PATHS = ["/site/assets/cg/段1_003.jpg", "/site/assets/avatars/<角色>.jpg"]
 # 挑图页刻意放在 site/ 之外（不随站点发布）；服务需挂在项目根才能取到
 PICK_PATH = "/.trpg/pickpage/asset-pick.html"
 
 
 def fetch(url: str) -> tuple[int, bytes]:
-    # 站点素材文件名含中文（段1_003.jpg / 杰克.jpg）→ 必须先做百分号编码，
+    # 站点素材文件名含中文（段1_003.jpg / <角色>.jpg）→ 必须先做百分号编码，
     # 否则 urllib 会在 http.client 里拿 ascii 编码而抛 UnicodeEncodeError。
     safe = urllib.parse.quote(url, safe=":/?&=#%")
     with urllib.request.urlopen(safe, timeout=10) as r:

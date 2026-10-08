@@ -20,7 +20,7 @@ from PIL import Image
 WS = Path(os.environ.get("TRPG_WS", "workspace"))     # TRPG关系网
 AVATARS = WS / "\u6570\u636e" / "\u5934\u50cf"          # 数据/头像
 CHARS = WS / "\u6570\u636e" / "characters.json"
-CAND = Path(os.environ.get("TRPG_NAI", "novelai") / 'archive' / '24-trpg-npc-yymg6')
+CAND = Path(os.environ.get("TRPG_NAI", "novelai") / 'archive' / '<批次目录>')
 SIZE = 48
 
 

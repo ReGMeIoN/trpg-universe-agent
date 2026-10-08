@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """从角色卡里抽出图片（.docx 的 word/media，.doc 的 OLE 流里扫 JPEG/PNG）。
 
-为什么要它：`数据/头像/` 里既有的那批（如 `木柜子_魔法少女Dollmaker__image1.png`）就是从卡里
-抽出来的立绘，但「圣剑英雄谭」这 7 张卡没走这一步 —— 关系图因此只有问号没有头像。
+为什么要它：`数据/头像/` 里既有的那批（形如 `<团>_<角色>__image1.png`）就是从卡里
+抽出来的立绘，但有些卡没走这一步 —— 关系图因此只有问号没有头像。
 
 用法:
     .venv\\Scripts\\python.exe tools\\_extract_sheet_images.py <卡目录> <输出目录>
@@ -55,7 +55,7 @@ def _jpeg_size(b: bytes) -> tuple[int, int]:
 def read_zip_member_nocrc(z: zipfile.ZipFile, name: str) -> bytes:
     """读 zip 成员，**跳过 CRC 校验**。
 
-    起因（2026-10-05）：`阴阳差事录-牛(1).docx` 的 `word/media/*` 在中央目录里写的是**错误的 CRC**
+    起因：某角色的 .docx 的 `word/media/*` 在中央目录里写的是**错误的 CRC**
     （两张图都是），`z.read()` 因此抛 `BadZipFile: Bad CRC-32`，害得「知行」被判成"卡内图损坏、无立绘"。
     实测解压出来的字节是**完整的、能正常解码的** JPEG/PNG —— 坏的只是目录里的校验值，
     多半是某次重打包（网盘/转存工具）留下的。所以不该因为 CRC 不符就放弃这张图。

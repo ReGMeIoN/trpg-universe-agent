@@ -339,7 +339,7 @@ async def api_suggest(request: Request):
     if kind.startswith("rel_") and not (payload.get("from") and payload.get("to")):
         return bad("关系类建议必须带 from / to")
 
-    ip_hash = sha256hex("sjt|" + client_ip(request))
+    ip_hash = sha256hex("wiki|" + client_ip(request))
     if not rate_ok(ip_hash):
         return bad(f"提交太频繁（10 分钟内最多 {RATE_MAX} 条），歇一会儿再来", 429)
 

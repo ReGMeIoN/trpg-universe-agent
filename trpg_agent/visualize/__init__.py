@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""可视化编排: 团关系图 / PL 画像墙 / 关系网 md / 杰克档案 / 编年史。
+"""可视化编排: 团关系图 / PL 画像墙 / 关系网 md / 宇宙总览 / 编年史。
 
 安全原则(重要):
-    手写文档(杰克档案.md / 跑团宇宙编年史.md 等)是珍贵资产, **绝不无条件覆盖**。
+    手写文档(跑团宇宙编年史.md 等)是珍贵资产, **绝不无条件覆盖**。
     - 目标文件不存在, 或首行带 AUTO-GENERATED 标记 -> 直接生成;
     - 否则 -> 把自动生成的内容写到 <work>/reports/ 下的「更新建议」文件, 并明确告警,
-      由主人决定是否合并。
+      由使用者决定是否合并。
 """
 from __future__ import annotations
 
@@ -78,47 +78,11 @@ def relations_md(ws: Workspace, group: str) -> str:
         lines.append(
             f"| {a} | {r.get('type','')} | {r.get('strength','')} | {b} | {str(r.get('event') or '')[:80]} |"
         )
-    cross = [c for c in chars if "跨团" in (c.get("tags") or [])]
-    lines += ["", f"## 三、跨团角色（{len(cross)}）", ""]
-    for c in cross:
-        lines.append(f"- **{c.get('name')}**：{c.get('note','')}")
     todo = [c for c in chars if "待确认" in (c.get("tags") or [])]
-    lines += ["", f"## 四、待确认（{len(todo)}）", ""]
+    lines += ["", f"## 三、待确认（{len(todo)}）", ""]
     for c in todo:
         lines.append(f"- {c.get('name')}：{c.get('note','')}")
     lines += ["", "---", "", f"{AUTO_MARK} ({datetime.now().strftime('%Y-%m-%d')}) -->"]
-    return "\n".join(lines) + "\n"
-
-
-def jack_dossier(ws: Workspace, cfg: Config) -> str:
-    chars_doc = json.loads(ws.data_file("characters").read_text(encoding="utf-8"))
-    chars = chars_doc.get("characters", [])
-    jack = [c for c in chars if c.get("id") in cfg.visualize.jack_ids or "杰克" in (c.get("name") or "")]
-    if not jack:
-        return (f"{AUTO_MARK} -->\n# 杰克档案\n\n"
-                f"（数据里没有找到杰克节点, 配置项 visualize.jack_ids = {cfg.visualize.jack_ids}）\n")
-    # 首行标记（理由见 relations_md 的注释）；杰克档案是**手写正本**，只有它自己带首行标记
-    # 才会被就地覆盖——现存那份没有标记，所以永远走「建议文件」分支（这是设计意图）。
-    lines = [f"{AUTO_MARK} -->", "# 🎩 杰克 · 档案（由数据自动生成）", ""]
-    lines.append(f"- 生成: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    lines.append(f"- 节点: {', '.join(f'`{c.get('id')}`' for c in jack)}")
-    lines.append("")
-    for c in jack:
-        lines.append(f"## {c.get('name')}")
-        if c.get("identity"):
-            lines.append(f"- **定位**：{c['identity']}")
-        if c.get("note"):
-            lines.append(f"- **概述**：{c['note']}")
-        lines.append(f"- **出场团**：{'、'.join(c.get('groups') or [])}")
-        lines.append("")
-        lines.append("### 分团事件")
-        for ev in c.get("events") or []:
-            lines.append(f"**{ev.get('group')}**")
-            for it in ev.get("items") or []:
-                lines.append(f"- {it}")
-            lines.append("")
-    lines.append("---")
-    lines.append(f"{AUTO_MARK} ({datetime.now().strftime('%Y-%m-%d')}) -->")
     return "\n".join(lines) + "\n"
 
 
@@ -131,24 +95,18 @@ def universe_overview(ws: Workspace) -> str:
     groups: dict[str, dict[str, int]] = {}
     for c in chars:
         for g in (char_groups(c) or ["(未标注)"]):
-            groups.setdefault(g, {"chars": 0, "cross": 0})
+            groups.setdefault(g, {"chars": 0})
             groups[g]["chars"] += 1
-            if "跨团" in (c.get("tags") or []):
-                groups[g]["cross"] += 1
     # 首行标记（理由见 relations_md 的注释）
     lines = [f"{AUTO_MARK} -->", "# 跑团宇宙总览（由数据自动生成）", ""]
     lines.append(f"- 生成: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     lines.append(f"- 合计：**{len(chars)} 角色 / {len(rels)} 关系 / "
                  f"{len(prof_doc.get('profiles') or [])} 位 PL / {len(groups)} 个团**")
     lines.append("")
-    lines.append("| 团 | 角色数 | 其中跨团 |")
-    lines.append("|---|---|---|")
+    lines.append("| 团 | 角色数 |")
+    lines.append("|---|---|")
     for g, st in sorted(groups.items(), key=lambda kv: -kv[1]["chars"]):
-        lines.append(f"| {g} | {st['chars']} | {st['cross']} |")
-    cross_all = [c for c in chars if "跨团" in (c.get("tags") or [])]
-    lines += ["", f"## 跨团角色（{len(cross_all)}）", ""]
-    for c in cross_all:
-        lines.append(f"- **{c.get('name')}**（`{c.get('id')}`）：{(c.get('note') or '')[:100]}")
+        lines.append(f"| {g} | {st['chars']} |")
     todo = [c for c in chars if "待确认" in (c.get("tags") or [])]
     lines += ["", f"## 待确认角色（{len(todo)}）", ""]
     for c in todo:
@@ -164,7 +122,7 @@ def run_visualize(ws: Workspace, cfg: Config, group: str | None = None, all_grou
     if cfg.visualize.net_enabled:
         groups = [group] if group else manifest_groups(ws) if all_groups else []
         if group is None and not all_groups:
-            log.info("未指定 --group, 只生成宇宙级产物(PL墙/总览/杰克档案)")
+            log.info("未指定 --group, 只生成宇宙级产物(PL墙/总览)")
         for g in groups:
             try:
                 r = net_html.build(ws, g)
@@ -179,8 +137,6 @@ def run_visualize(ws: Workspace, cfg: Config, group: str | None = None, all_grou
         except (FileNotFoundError, json.JSONDecodeError) as e:
             log.warn(f"PL 画像墙跳过: {e}")
 
-    if cfg.visualize.jack_dossier:
-        result["docs"].append(_write_doc(ws.output / "杰克档案.md", jack_dossier(ws, cfg), "杰克档案", ws))
     result["docs"].append(
         _write_doc(ws.output / "跑团宇宙总览.md", universe_overview(ws), "宇宙总览", ws)
     )

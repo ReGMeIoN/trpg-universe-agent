@@ -3,7 +3,7 @@
 #  跑团宇宙 wiki · Debian 12 一键部署
 #  ------------------------------------------------------------
 #  用法（在 Debian 12 上，用有 sudo 权限的账号跑）：
-#      sudo bash deploy-debian.sh /opt/trpg-wiki
+#      sudo bash deploy-debian.sh /opt/trpg-universe
 #
 #  它会做：
 #    1. 装 python3-venv / rsync / sqlite3
@@ -18,8 +18,8 @@
 # ============================================================
 set -euo pipefail
 
-APP_DIR="${1:-/opt/trpg-wiki}"
-SERVICE_NAME="trpg-wiki"
+APP_DIR="${1:-/opt/trpg-universe}"
+SERVICE_NAME="trpg-universe"
 PORT="${PORT:-8788}"
 SVC_USER="${SVC_USER:-www-data}"
 

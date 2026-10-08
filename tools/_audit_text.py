@@ -24,7 +24,7 @@ PATTERNS = [
     ("角色卡设定字样", re.compile(r"角色卡设定|角色卡原件")),
     ("转写/ASR 字样", re.compile(r"转写|ASR|录音里|音近")),
     ("场外/玩梗提示", re.compile(r"场外|玩梗|桌边梗|玩家胡诌")),
-    ("KR/KP 口播提示", re.compile(r"^菌羊描述|KP描述|口播")),
+    ("KR/KP 口播提示", re.compile(r"^KP描述|口播")),
     ("英文残留", re.compile(r"[A-Za-z]{4,}")),
     ("连续空行/分隔", re.compile(r"^---+$")),
 ]

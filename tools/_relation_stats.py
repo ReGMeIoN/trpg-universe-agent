@@ -2,11 +2,11 @@
 """关系密度体检：每个团有多少节点/边、边/节点比、以及有多少「团内两人却没有任何边」。
 
 用来发现「关系抽少了」的团——extract 只抽角色骨架，**关系靠编年史补**（见
-`_extract_relations_sjt.py` / `_merge_relations_sjt.py` 的老做法）。
+旧做法）。
 
 用法:
     python tools/_relation_stats.py
-    python tools/_relation_stats.py --group "魔法少女育成计划 6" --list   # 列出该团全部边
+    python tools/_relation_stats.py --group "我的团" --list   # 列出该团全部边
 """
 from __future__ import annotations
 

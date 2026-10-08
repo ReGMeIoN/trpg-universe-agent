@@ -6,7 +6,7 @@ the moment the work is finished is cheaper than polling the harness every few mi
 Also exits early (rc=1) when the log stops growing for STALL_MIN minutes, so a hung run
 does not silently eat the whole night.
 
-usage: python tools/_wait_transcribe.py --group "魔法少女育成计划 6" [--log <log>] [--hours 5]
+usage: python tools/_wait_transcribe.py --group "我的团" [--log <log>] [--hours 5]
 """
 from __future__ import annotations
 

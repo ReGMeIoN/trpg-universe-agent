@@ -8,7 +8,7 @@ D1 就是 SQLite，所以**不需要任何格式转换**：`wrangler d1 export` 
     python tools\\_export_d1.py                        # 导出到 server\\wiki.db
     python tools\\_export_d1.py --out D:\\bak\\wiki.db   # 指定目标
     python tools\\_export_d1.py --from-sql dump.sql     # 用已导出的 SQL（不再调 wrangler）
-    python tools\\_export_d1.py --db sjt-wiki --keep-sql
+    python tools\\_export_d1.py --db <D1库名> --keep-sql
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_DB = "sjt-wiki"
+DEFAULT_DB = os.environ.get("TRPG_D1_DB", "")
 DEFAULT_OUT = ROOT / "server" / "wiki.db"
 
 

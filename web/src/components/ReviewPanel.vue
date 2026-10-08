@@ -93,9 +93,9 @@ function setField(it) {
 }
 
 function mergeNaming(it) {
-  const canonical = prompt('归一到哪个标准称呼？（如 菌羊）')
+  const canonical = prompt('归一到哪个标准称呼？')
   if (!canonical) return
-  const variant = prompt('被归一的写法是？（如 军羊）')
+  const variant = prompt('被归一的写法是？')
   if (!variant) return
   decisions.value.push({ action: 'merge', canonical, variant })
 }

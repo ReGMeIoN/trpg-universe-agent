@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """KB 包导出: 由数据自动生成 RAG 友好的 Markdown(供 AstrBot / 本地向量库消费)。
 
 安全原则:
@@ -15,7 +15,7 @@ from typing import Any
 from trpg_agent import log
 from trpg_agent.config import Config
 from trpg_agent.data_utils import collect_groups
-from trpg_agent.visualize import jack_dossier, relations_md, universe_overview
+from trpg_agent.visualize import relations_md, universe_overview
 from trpg_agent.workspace import Workspace
 
 MANIFEST = "kb_manifest.json"
@@ -59,7 +59,6 @@ def run_export(ws: Workspace, cfg: Config) -> dict[str, Any]:
         written.append(rel)
 
     emit("00_跑团宇宙总览.md", universe_overview(ws))
-    emit("00b_杰克档案.md", jack_dossier(ws, cfg))
 
     prof = json.loads(ws.data_file("pl_profiles").read_text(encoding="utf-8")).get("profiles", [])
     pl_lines = ["# PL 玩家档案（自动生成）", "", f"- 生成: {datetime.now().strftime('%Y-%m-%d %H:%M')}",

@@ -5,7 +5,7 @@ Handy after a shadow-store rehearsal: shows exactly what would land in the produ
 (ids / names / tags / played_by / aliases), without opening the JSON by hand.
 
 usage:
-    python tools/_show_group_chars.py --group "阴阳差事录 超自然怪谈"
+    python tools/_show_group_chars.py --group "我的团"
     python tools/_show_group_chars.py --ws "<shadow_ws>" --group X --full
 """
 from __future__ import annotations
@@ -28,7 +28,7 @@ def main() -> int:
     ap.add_argument("--group", required=True)
     ap.add_argument("--ws", default=str(WS))
     ap.add_argument("--full", action="store_true")
-    ap.add_argument("--prefix", default=None, help="按 id 前缀过滤(如 yy_)")
+    ap.add_argument("--prefix", default=None, help="按 id 前缀过滤(如 my_)")
     args = ap.parse_args()
 
     ws = Path(args.ws)

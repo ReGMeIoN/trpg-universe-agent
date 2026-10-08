@@ -6,8 +6,8 @@
 
 用法:
     .venv\\Scripts\\python.exe tools\\extract_all.py --dry-run          # 只列清单与预估
-    .venv\\Scripts\\python.exe tools\\extract_all.py --exclude 无敌巨鲨大战奈亚拉托提普
-    .venv\\Scripts\\python.exe tools\\extract_all.py --only 魔法少女五 魔法少女2
+    .venv\\Scripts\\python.exe tools\\extract_all.py --exclude <团名>
+    .venv\\Scripts\\python.exe tools\\extract_all.py --only <团名> <团名>
 """
 from __future__ import annotations
 

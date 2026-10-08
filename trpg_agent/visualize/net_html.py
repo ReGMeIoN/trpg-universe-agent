@@ -115,11 +115,10 @@ def build(ws: Workspace, group: str, out_name: str | None = None, exclude: set[s
             if av
             else f'<div class="avatar noimg clickable" onclick="openModal(\'{cid}\')" title="点击查看详情">?</div>'
         )
-        cross = ' <span class="cross">跨</span>' if "跨团" in (c.get("tags") or []) else ""
         kp = ' <span class="kp">KP</span>' if "KP" in (c.get("tags") or []) else ""
         node_html.append(
             f'<div class="node" style="left:{x - 55:.0f}px;top:{y - 62:.0f}px">'
-            f"{av_el}<div class=\"name\">{_esc(c['name'])}{cross}{kp}</div>"
+            f"{av_el}<div class=\"name\">{_esc(c['name'])}{kp}</div>"
             f'<div class="role">{_esc(str(c.get("identity", ""))[:12])}</div></div>'
         )
 
@@ -137,7 +136,7 @@ def build(ws: Workspace, group: str, out_name: str | None = None, exclude: set[s
     details_json = json.dumps(details, ensure_ascii=False).replace("</", "<\\/")
     page = _PAGE.format(
         title=_esc(group),
-        subtitle=f"共 {len(node_ids)} 名角色 · {len(edges)} 条关系 · 点击头像查看角色详情 · 标「跨」=跨团",
+        subtitle=f"共 {len(node_ids)} 名角色 · {len(edges)} 条关系 · 点击头像查看角色详情",
         svg_edges="".join(svg_edges),
         nodes="".join(node_html),
         rel_rows="".join(rel_rows),

@@ -5,7 +5,7 @@
 
 用法:
     python tools/_roster_audit.py
-    python tools/_roster_audit.py --group "圣剑英雄谭"
+    python tools/_roster_audit.py --group "我的团"
 """
 from __future__ import annotations
 

@@ -695,7 +695,7 @@ function renderOverview() {
       ? `<div class="hexin" style="background-image:url('${cover}')"></div>`
       : (withAv.length
         ? `<div class="hexin noimg">${withAv.slice(0, 4).map(c => `<img src="${c.avatar.thumb}">`).join('')}</div>`
-        // 一个立绘都没有（KP 牢昌、叶珏那种）→ 大字首字 + 主题色，别留个空壳
+        // 一个立绘都没有（KP <KP>、叶珏那种）→ 大字首字 + 主题色，别留个空壳
         : `<div class="hexin letter" style="--c:${e.color || '#8fa3b8'}">
              <span>${esc((CH.get(e.ids[0]) || {}).name?.slice(0, 1) || '?')}</span></div>`);
     t.innerHTML = `<div class="hexwrap">${inner}<div class="veil"></div></div>
@@ -943,15 +943,10 @@ function clearAll() {
 
 /* ── 杂项 ─────────────────────────────────────────────────── */
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
-const EN = {
-  '阴阳差事录 超自然怪谈': 'YIN-YANG CASE FILES', '圣剑英雄谭': 'HOLY SWORD SAGA',
-  '魔法少女育成计划 6': 'MAGICAL GIRL PROGRAM 6', '魔法少女救赎线': 'REDEMPTION LINE',
-  '魔法少女木柜子': 'MAGICAL GIRL CLOSET', '魔法少女2': 'MAGICAL GIRL II', '魔法少女五': 'MAGICAL GIRL V',
-  '魔女裁判厅': 'WITCH TRIBUNAL', '无敌巨鲨大战奈亚拉托提普': 'MEGA SHARK VS NYARLATHOTEP',
-  '致无名者之声': 'TO THE NAMELESS', '恋爱与命运的不思议冒险？！': 'LOVE & FATE',
-  '卧槽是伪人群·伪人杀': 'PSEUDO-HUMAN KILL', '卧槽是伪人群·雪山狼人杀': 'SNOW WEREWOLF',
-  '卧槽是伪人群·异世界大逃杀': 'ISEKAI BATTLE ROYALE'
-};
+/* 团名的英文副标题映射（可选）。留空则直接用团名本身。
+   想给某团配英文名，在 tools/_netsite/site_config.json 里加 "group_en": {"团名": "ENGLISH"}，
+   构建时会注入到 window.__SITE_CFG__；这里只做兜底。 */
+const EN = (typeof window !== 'undefined' && window.__SITE_CFG__ && window.__SITE_CFG__.group_en) || {};
 function enName(s) {
   if (EN[s]) return EN[s];
   if (s === 'PC') return 'PLAYER CHARACTERS';
@@ -1021,11 +1016,12 @@ function boot() {
   loadAdj();                                          // 先装载布局账本（服务器注入 or localStorage）
   const bar = $('#bootBar'), log = $('#bootLog'), root = $('#boot');
   if (!root || !bar || !log) { showHome(); return; }   // 没有启动页也要能跑（排障用）
-  // 启动徽记：用杰克的头像（找不到就退回深色底）
-  const jack = N.chars.find(c => c.id === 'cross_jieke')
-    || N.chars.find(c => (c.name || '').includes('杰克') && c.avatar);
+  // 启动徽记：取「关系最多且带立绘」的角色头像（找不到就退回深色底）
+  const hero = N.chars.filter(c => c.avatar)
+    .sort((a, b) => (N.rels.filter(r => r.a === b.id || r.b === b.id).length)
+                  - (N.rels.filter(r => r.a === a.id || r.b === a.id).length))[0];
   const bm = $('#bmIn');
-  if (bm && jack && jack.avatar) bm.style.backgroundImage = `url('${jack.avatar.full}')`;
+  if (bm && hero && hero.avatar) bm.style.backgroundImage = `url('${hero.avatar.full}')`;
   let i = 0;
   const tick = () => {
     if (i >= BOOT_STEPS.length) {

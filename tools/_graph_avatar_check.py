@@ -3,7 +3,7 @@
 
 用法:
     python tools/_graph_avatar_check.py                       # 全库所有 <团>_关系图.html
-    python tools/_graph_avatar_check.py --group "魔法少女育成计划 6" --names 戈登,张雪峰老师
+    python tools/_graph_avatar_check.py --group "我的团" --names 角色甲,角色乙
 """
 from __future__ import annotations
 

@@ -120,7 +120,7 @@ def main() -> int:
     r = run_store(ws, cfg, patch_path=PATCH, apply=False)
     plan = r["plan"]
     check("计划: 新增角色 4", len(plan["new_characters"]) == 4, str(plan["new_characters"]))
-    check("计划: 更新角色 1", plan["updated_characters"] == ["cross_heiyi"], str(plan["updated_characters"]))
+    check("计划: 更新角色 1", plan["updated_characters"] == ["xh_heiyi"], str(plan["updated_characters"]))
     check("计划: 新增关系 3", len(plan["new_relations"]) == 3, str(plan["new_relations"]))
     check("计划: 待确认 5(含 2 条未确认降级)", len(plan["pending"]) == 5, str(len(plan["pending"])))
     check("计划: 称呼归一 3", len(plan["normalized"]) == 3, str(plan["normalized"]))
@@ -133,8 +133,8 @@ def main() -> int:
     check("未确认角色未进工作副本", all(c["id"] != "xh_shenmi" for c in staged["characters"]))
     tieya = next(c for c in staged["characters"] if c["id"] == "xh_tieya")
     check("称呼归一: 老鸭 -> 老鸦", tieya["played_by"] == "老鸦", tieya["played_by"])
-    heiyi = next(c for c in staged["characters"] if c["id"] == "cross_heiyi")
-    check("跨团角色 groups 追加", "星海列车" in heiyi["groups"], str(heiyi["groups"]))
+    heiyi = next(c for c in staged["characters"] if c["id"] == "xh_heiyi")
+    check("角色 groups 追加", "星海列车" in heiyi["groups"], str(heiyi["groups"]))
 
     # ---------- 4. store --apply ----------
     print("[4] store --apply (示例库非生产库, 允许回填)")

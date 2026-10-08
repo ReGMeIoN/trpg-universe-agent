@@ -3,8 +3,8 @@
 
 来源: <work>/canon/naming.json
 格式(两种都支持):
-    {"canonical": [{"name": "菌羊", "aliases": ["军阳", "君羊", "俊阳"]}]}
-    {"菌羊": ["军阳", "君羊"]}
+    {"canonical": [{"name": "标准称呼", "aliases": ["常见误写1", "常见误写2"]}]}
+    {"标准称呼": ["常见误写1", "常见误写2"]}
 归一结果会记录成映射表, 供入库报告审计(重大合并必须可审)。
 """
 from __future__ import annotations
@@ -67,7 +67,7 @@ class Naming:
         if s in self.alias_to_canonical:
             canon = self.alias_to_canonical[s]
             return canon, canon != s
-        # 子串匹配: "菌羊（凤樱姬玩家）" 命中 "菌羊" / "凤樱姬玩家"
+        # 子串匹配: "标准称呼（某备注）" 能命中 "标准称呼"
         for alias, canon in self.alias_to_canonical.items():
             if len(alias) >= 2 and alias in s:
                 return canon, canon != s

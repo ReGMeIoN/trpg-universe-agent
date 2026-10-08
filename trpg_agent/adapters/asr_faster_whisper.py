@@ -285,7 +285,7 @@ def iter_events(
         speech_total += sum((c["end"] - c["start"]) for c in chunks) / SR
         yield {"kind": "window_done", "window": widx, "batches": len(batches), "skipped": False}
 
-    # 解码容错: 音频文件尾部损坏时(实测 圣剑英雄谭.mp3 最后 0.7 分钟),
+    # 解码容错: 音频文件尾部损坏时(实测某 6 小时录音最后 0.7 分钟),
     # container.decode() 迭代到坏包会抛 InvalidDataError。旧版直接让整段转写判失败,
     # 已经解码进内存的十几分钟音频被白白丢掉。现在: 坏包停手, 已解码部分照常出结果。
     # 注意: "一点都没解出来"仍然按失败抛出, 不允许静默产出空稿。

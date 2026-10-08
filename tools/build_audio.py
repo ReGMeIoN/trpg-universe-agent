@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 SITE = ROOT / "site"
-AUDIO = Path(os.environ.get("TRPG_WS", "workspace") / '素材' / '圣剑英雄谭.mp3')
+AUDIO = Path(os.environ.get("TRPG_WS", "workspace") / '素材' / '<团>.mp3')
 CLIP_S = 26.0
 RATE = 24000
 

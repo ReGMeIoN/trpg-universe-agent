@@ -3,12 +3,12 @@
 
 裁决文件: <work>/review/<团>_待确认.json
 {
-  "group": "星海列车",
+  "group": "<团名>",
   "decisions": [
     {"target": "characters", "index": 4, "action": "accept", "note": "确认为独立 NPC"},
     {"target": "relations",  "index": 3, "action": "reject", "note": "证据不足"},
-    {"target": "characters", "index": 0, "action": "set", "field": "played_by", "value": "宽"},
-    {"target": "naming", "action": "merge", "canonical": "菌羊", "variant": "军羊"}
+    {"target": "characters", "index": 0, "action": "set", "field": "played_by", "value": "<PL 标准称呼>"},
+    {"target": "naming", "action": "merge", "canonical": "<标准称呼>", "variant": "<误写>"}
   ]
 }
 """

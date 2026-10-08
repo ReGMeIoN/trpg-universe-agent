@@ -108,7 +108,7 @@ def lint_patch(patch: dict[str, Any]) -> list[str]:
     for r in patch.get("relations") or []:
         for side in ("from", "to"):
             v = r.get(side)
-            if v and v not in known and not str(v).startswith("cross_"):
+            if v and v not in known:
                 # 可能是既有角色 id, 交给 store 的 references 校验
                 pass
     return warns

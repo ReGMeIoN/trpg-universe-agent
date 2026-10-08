@@ -323,7 +323,7 @@
     $('#wmDesc').innerHTML = desc || '';
     $('#wmFields').innerHTML = fields.map(fieldHtml).join('') +
       '<div class="wf-row"><label class="wf-label">署名<i>可不填</i></label>' +
-      '<input class="wf-in" data-f="__author" type="text" value="' + E(localStorage.getItem('sjt-wiki-author') || '') + '"></div>';
+      '<input class="wf-in" data-f="__author" type="text" value="' + E(localStorage.getItem('trpg-wiki-author') || '') + '"></div>';
     $('#wmSubmit').textContent = submitText || '提交建议';
     m.querySelector('.wf-in').focus();
   }
@@ -405,7 +405,7 @@
     openForm('建议关系 · 从「' + c.name + '」出发',
       '填「对方」的角色 id（可从搜索结果里复制）。关系会进待审箱。',
       [
-        { name: 'to', label: '对方角色 id', hint: '例如 yy_liulong；名字：' + opts.slice(0, 3).map(function (o) { return o.name; }).join('、') + '…', value: '' },
+        { name: 'to', label: '对方角色 id', hint: '例如 my_char；名字：' + opts.slice(0, 3).map(function (o) { return o.name; }).join('、') + '…', value: '' },
         { name: 'type', label: '关系类型', hint: '受控词表：亲属 / 师徒 / 敌对 / 友谊 / 从属 …', value: '友谊' },
         { name: 'strength', label: '强度', hint: '强 / 中 / 弱', value: '中' },
         { name: 'event', label: '出处 / 事件', type: 'textarea', rows: 3 },
@@ -485,7 +485,7 @@
     }).then(function (r) {
       btn.disabled = false; btn.textContent = '提交建议';
       if (r && r.ok) {
-        localStorage.setItem('sjt-wiki-author', author);
+        localStorage.setItem('trpg-wiki-author', author);
         closeForm();
         toast('已提交，编号 #' + r.id + ' · 等管理员审核通过后生效');
       } else {
@@ -526,7 +526,7 @@
   /* 编辑器口令（与 editor.js 同一个键） */
   function ED_TOKEN() {
     try {
-      return localStorage.getItem('sjt-edit-token') ||
+      return localStorage.getItem('trpg-edit-token') ||
              localStorage.getItem('trpg-edit-token') || '';
     } catch (e) { return ''; }
   }
@@ -713,7 +713,7 @@
      ══════════════════════════════════════════════════════════ */
   var RV = { items: [], token: '' };
 
-  function getToken() { return localStorage.getItem('sjt-wiki-token') || ''; }
+  function getToken() { return localStorage.getItem('trpg-wiki-token') || ''; }
 
   function describe(it) {
     var p = it.payload || {};
@@ -816,7 +816,7 @@
   function loadReview() {
     var t = $('#rvToken').value.trim();
     if (!t) { toast('请填管理员口令', true); return; }
-    localStorage.setItem('sjt-wiki-token', t);
+    localStorage.setItem('trpg-wiki-token', t);
     RV.token = t;
     $('#rvList').innerHTML = '<div class="rv-empty">加载中…</div>';
     api('/api/suggestions?status=pending&limit=200', { headers: { 'x-admin-token': t } })

@@ -4,11 +4,11 @@
 去重键与 `store` 一致：`(from, to, type)` 三元组。
 
 **补丁不存在时会自动新建**（只含 `group` + `relations`）——
-`魔法少女救赎线` / `魔法少女木柜子` 这类"当年没走 extract、库里只有角色"的团就靠它补关系。
+"当年没走 extract、库里只有角色"的团就靠它补关系。
 
 用法:
-    .venv\\Scripts\\python.exe tools\\_merge_relations.py --group "魔法少女木柜子"            # dry-run
-    .venv\\Scripts\\python.exe tools\\_merge_relations.py --group "魔法少女木柜子" --write
+    .venv\\Scripts\\python.exe tools\\_merge_relations.py --group "我的团"            # dry-run
+    .venv\\Scripts\\python.exe tools\\_merge_relations.py --group "我的团" --write
 """
 from __future__ import annotations
 

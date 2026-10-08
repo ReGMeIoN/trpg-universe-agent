@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 """从《剧情编年史》抽取**关系边**，产出待审草稿（只写草稿，不碰生产库）。
 
-为什么要它：`extract` 抽关系的口径极保守（它主要抽角色骨架），实测「魔法少女育成计划 6」
+为什么要它：`extract` 抽关系的口径极保守（它主要抽角色骨架），实测某个 30 段规模的团
 48 个角色只落了 23 条边、**22 个角色连一条边都没有**；编年史里其实明确写着大量关系
-（考核官↔学生、师徒、灵宠、宿敌、对手、同谋……）。圣剑英雄谭当年就是靠这一步补的 +22 条边。
+（考核官↔学生、师徒、灵宠、宿敌、对手、同谋……）。有的团靠这一步补了几十条边。
 
-与旧的 `_extract_relations_sjt.py` 的区别：
+
   1. **团名参数化**（`--group`），不再写死；
   2. 会把「当前一条边都没有的孤立角色」单独列给模型，**逐人要求核对**——这是覆盖率的关键；
   3. 目标条数按角色数自适应（约 0.9~1.3 边/人）。
 
 用法:
-    .venv\\Scripts\\python.exe tools\\_extract_relations.py --group "魔法少女育成计划 6"
-    .venv\\Scripts\\python.exe tools\\_extract_relations.py --group "阴阳差事录 超自然怪谈"
+    .venv\\Scripts\\python.exe tools\\_extract_relations.py --group "我的团"
+    .venv\\Scripts\\python.exe tools\\_extract_relations.py --group "另一个团"
 """
 from __future__ import annotations
 
@@ -51,7 +51,7 @@ PROMPT = """下面是一份 TRPG 跑团《{group}》的剧情材料（{material_
 ## 输出格式
 {{"relations": [
   {{"from": "xxx_id", "type": "关系类型(如 师徒/辅导对象/考核官与考生/灵宠归属/宿敌/对手/同谋/亲属/上下级/救命恩人)",
-    "strength": "强|中|弱", "to": "yyy_id",
+    "strength": "强|中|弱", "to": "<角色id>",
     "event": "剧情依据：哪一段/哪条事件、发生了什么（要具体到能被材料原文验证）",
     "confirmed": true}}
 ]}}

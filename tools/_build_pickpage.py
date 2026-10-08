@@ -6,13 +6,13 @@
 
 用法:
     python tools/_build_pickpage.py \
-        --dir  "<NAI库>\\archive\\24-trpg-npc-yymg6" \
-        --looks "<NAI库>\\trpg_looks_yy_mg6.py" \
-        --out   ".trpg\\pickpage\\npc-yymg6-pick.html" \
+        --dir  "<NAI库>\\archive\\<批次目录>" \
+        --looks "<NAI库>\\trpg_looks_<团>.py" \
+        --out   ".trpg\\pickpage\\<批次>-pick.html" \
         --title "两团 NPC 立绘三选一"
 
-主人挑完点「导出 picks」→ 得到 `_picks_portrait.json`（形如 {"yy_zijiu": "b"}）
-→ 交给 `tools/_apply_npc_portraits.py --picks <文件>` 落地。
+主人挑完点「导出 picks」→ 得到 `_picks_portrait.json`（形如 {"<角色id>": "b"}）
+→ 再写一个把 picks 落到数据里的脚本（读 `_picks_portrait.json` 后写回 characters.json）。
 """
 from __future__ import annotations
 

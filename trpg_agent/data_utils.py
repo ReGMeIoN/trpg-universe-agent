@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 """数据读取的小工具与卫生守卫。
 
-`groups` 字段按铁律只应放**团名(群名)**。实盘数据里存在把标签写进 groups 的情况
-(如 `groups: ["恋爱与命运的不思议冒险？！", "跨团"]`), 若不守卫, 会凭空多出一个叫
-「跨团」的团, 污染关系图/KB 包/统计。
+`groups` 字段按约定只应放**团名(群名)**。实盘数据里存在把标签写进 groups 的情况
+(如 `groups: ["某团", "待确认"]`), 若不守卫, 会凭空多出一个叫「待确认」的团,
+污染关系图/KB 包/统计。
 """
 from __future__ import annotations
 
 from typing import Any, Iterable
 
 #: 这些词是标签/状态, 不是团名
-RESERVED_GROUP_VALUES = {"跨团", "跨团常驻", "跨团主持人", "待确认", "KP", "PC", "NPC", ""}
+RESERVED_GROUP_VALUES = {"待确认", "KP", "PC", "NPC", "BOSS", ""}
 
 
 def is_real_group(value: Any) -> bool:

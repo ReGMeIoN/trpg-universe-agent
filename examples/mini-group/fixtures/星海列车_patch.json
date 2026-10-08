@@ -87,7 +87,7 @@
   ],
   "character_updates": [
     {
-      "id": "cross_heiyi",
+      "id": "xh_heiyi",
       "add_groups": ["星海列车"],
       "append_note": "星海列车（段2）在无风站长椅上等候玩家，说出「上一次也是四个人，三个人下了车」；灯罩刻有叠印地名。",
       "add_events": [{"group": "星海列车", "items": [
@@ -112,7 +112,7 @@
       "event": "段1 白露以「别在无风站下车」作为交换条件；段3 把决定权交回临海", "confirmed": true
     },
     {
-      "from": "cross_heiyi", "to": "xh_bailu", "type": "疑似旧识", "strength": "弱",
+      "from": "xh_heiyi", "to": "xh_bailu", "type": "疑似旧识", "strength": "弱",
       "event": "段2 白露在黑衣客出现后立即广播锁回乘客，动机不明",
       "confirmed": false,
       "pending_reason": "白露锁门与黑衣客登场只是时间相邻，无直接对话证据"

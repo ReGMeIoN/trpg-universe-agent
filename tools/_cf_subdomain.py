@@ -19,7 +19,7 @@ import requests
 
 TOML = Path.home() / "AppData" / "Roaming" / "xdg.config" / ".wrangler" / "config" / "default.toml"
 ACCT = os.environ.get("CF_ACCOUNT_ID", "")   # 从环境变量读, 不要硬编码
-CANDIDATES = ["sjt-chronicle", "swordheroes", "sjt-universe", "huanying-sjt"]
+CANDIDATES: list[str] = []   # 想试注册的名字, 按需填写
 
 
 def token() -> str:

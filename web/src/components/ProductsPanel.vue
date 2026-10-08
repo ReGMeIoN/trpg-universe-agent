@@ -56,7 +56,7 @@ function kb(n) {
   <div class="card">
     <h2>产物预览（{{ products.length }} 个文件）</h2>
     <div class="row" style="margin-bottom:10px">
-      <input v-model="filter" placeholder="过滤文件名，如 关系图 / 编年史 / 杰克" style="min-width:280px" />
+      <input v-model="filter" placeholder="过滤文件名，如 关系图 / 编年史 / 总览" style="min-width:280px" />
       <span class="muted">HTML 关系图直接内嵌渲染；Markdown 渲染为可读文档</span>
     </div>
     <table>

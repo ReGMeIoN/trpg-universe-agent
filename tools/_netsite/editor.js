@@ -26,8 +26,8 @@
   function md(s) { return (window.__wikiRender || E)(s || ''); }
 
   var ED = {
-    token: localStorage.getItem('sjt-edit-token') || '',
-    who: localStorage.getItem('sjt-edit-who') || '',
+    token: localStorage.getItem('trpg-edit-token') || '',
+    who: localStorage.getItem('trpg-edit-who') || '',
     cur: null,          // 当前编辑的角色 id
     meta: null,
     all: null,          // 全量角色（编辑器用；站点画图用的是选角子集）
@@ -105,8 +105,8 @@
       }).then(function (r) { return r.json(); }).then(function (d) {
         if (d && d.ok) {
           ED.token = t; ED.who = who || '匿名';
-          localStorage.setItem('sjt-edit-token', t);
-          localStorage.setItem('sjt-edit-who', ED.who);
+          localStorage.setItem('trpg-edit-token', t);
+          localStorage.setItem('trpg-edit-who', ED.who);
           hideLock(); bootEditor();
         } else {
           $('#edErr').textContent = (d && d.error) || '口令不对';
@@ -372,7 +372,7 @@
     btn.disabled = true; btn.textContent = '保存中…';
     api('/api/edit/char', { method: 'POST', body: body }).then(function (r) {
       if (r && r.ok) {
-        localStorage.removeItem('sjt-edit-draft');
+        localStorage.removeItem('trpg-edit-draft');
         toast('已保存' + (r.created ? '（新建角色）' : '') + ' · 刷新中…');
         setTimeout(function () {
           var h = '#/edit' + (ED.cur ? '/' + ED.cur : '');
@@ -454,7 +454,7 @@
      新建角色
      ══════════════════════════════════════════════════════════ */
   function newChar() {
-    var id = prompt('新角色的 id（英文/数字/下划线，例如 yy_xinnpc）：');
+    var id = prompt('新角色的 id（英文/数字/下划线，例如 my_xinnpc）：');
     if (!id) return;
     var nm = prompt('名字：') || id;
     api('/api/edit/char', {

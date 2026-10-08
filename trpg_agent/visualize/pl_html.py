@@ -10,11 +10,14 @@ from typing import Any
 from trpg_agent import log
 from trpg_agent.workspace import Workspace
 
-EMOJI = {
-    "ReGMeIoN": "🐋", "牢昌": "🐋", "pd": "🎲", "雪人": "⛄", "往": "🎭",
-    "菌羊": "🦊", "宽": "🍬", "牛爷": "🐂", "阿翔": "🪓", "卡尼三三": "🔍",
-    "阿蓝": "🔵", "小满": "🌙", "老鸦": "🪶", "阿澈": "🎩",
-}
+# 无头像时的占位图标：优先用 PL 档案自带的 `emoji` 字段，
+# 否则按名字做稳定散列，挑一个中性表情（同一个名字每次结果一致）。
+# ⚠️ 不要在这里硬编码具体玩家的昵称——那是使用者自己的数据。
+_PLACEHOLDER_EMOJI = ["👤", "🎭", "🎲", "🎩", "🔍", "🪶", "🌙", "🍬", "🎴", "⭐"]
+
+
+def _placeholder(name: Any) -> str:
+    return _PLACEHOLDER_EMOJI[sum(map(ord, str(name or ""))) % len(_PLACEHOLDER_EMOJI)]
 
 
 def _esc(s: Any) -> str:
@@ -33,7 +36,7 @@ def build(ws: Workspace, out_name: str = "PL画像可视化.html") -> dict[str, 
     profiles = json.loads(ws.data_file("pl_profiles").read_text(encoding="utf-8")).get("profiles", [])
     cards: list[str] = []
     for p in profiles:
-        emoji = EMOJI.get(p.get("name"), "👤")
+        emoji = p.get("emoji") or _placeholder(p.get("name"))
         av = _avatar_rel(p, ws)
         av_html = (
             f'<div class="pl-avatar"><img src="{_esc(av)}" alt="头像"></div>'

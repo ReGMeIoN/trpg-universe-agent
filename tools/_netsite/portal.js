@@ -19,7 +19,7 @@
     });
   }
   function token() {
-    try { return localStorage.getItem('sjt-edit-token') || localStorage.getItem('trpg-edit-token') || ''; }
+    try { return localStorage.getItem('trpg-edit-token') || localStorage.getItem('trpg-edit-token') || ''; }
     catch (e) { return ''; }
   }
   function nick() {

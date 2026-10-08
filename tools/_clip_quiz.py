@@ -7,8 +7,8 @@
   这条工作流对任何团/任何存疑清单都通用。
 
 用法:
-    .venv\\Scripts\\python.exe tools\\_clip_quiz.py --group 圣剑英雄谭
-    .venv\\Scripts\\python.exe tools\\_clip_quiz.py --group 圣剑英雄谭 --quiz my_quiz.json
+    .venv\\Scripts\\python.exe tools\\_clip_quiz.py --group <团名>
+    .venv\\Scripts\\python.exe tools\\_clip_quiz.py --group <团名> --quiz my_quiz.json
     # 外部 JSON: [{"id":"Q01","topic":"...","kws":["威尔娜","维尼拉"],"hint":"..."}]
 
 产物:
@@ -33,47 +33,13 @@ TS_RE = re.compile(r"^\[\s*([\d.]+)\s*->\s*([\d.]+)\s*\]\s?(.*)$")
 PAD_BEFORE = 6.0
 PAD_AFTER = 4.0
 
-# 圣剑英雄谭：需要"听"的存疑条目（来自 .trpg/reports/圣剑英雄谭_待确认.md）
-QUIZ_SJT = [
-    {"id": "Q01", "topic": "威尔娜的名字到底怎么写？",
-     "kws": ["威尔娜", "维尼拉", "肥腾威尔拉", "威尔特", "威尔拉"],
-     "hint": "转写里并存几种写法，请确认标准写法（是她本人的自称/他人称呼哪一处为准）"},
-    {"id": "Q02", "topic": "「黄泳多」是不是「煌炎国」？",
-     "kws": ["黄泳多"], "hint": "段1 提及圣女所属国；是国名听错吗？"},
-    {"id": "Q03", "topic": "「死鬼」是不是「尸鬼」？",
-     "kws": ["死鬼"], "hint": "四骑士带来的东西；正式叫法是什么？"},
-    {"id": "Q04", "topic": "「吉祖哥」「沙沙」「杀杀」「雪人沙铃」分别指谁？",
-     "kws": ["吉祖哥", "雪人沙铃", "沙沙", "杀杀"], "hint": "段2 多人名混用，请分别指认"},
-    {"id": "Q05", "topic": "灾星「诺亚/压实」是流星亚什本人吗？",
-     "kws": ["诺亚", "压实"], "hint": "难民口述的灾星，特征与流星亚什吻合；请确认名字与是否同一人"},
-    {"id": "Q07", "topic": "「艳术/焰术/炎术」哪个对？",
-     "kws": ["艳术", "焰术", "炎术"], "hint": "矮人国地下的共生种族名；另：当年毁灭该族的 PC 是谁"},
-    {"id": "Q08", "topic": "矮人大师的名字怎么写？",
-     "kws": ["80铁饭", "铁饭", "马斯特"], "hint": "持火焰圣剑的矮人大师"},
-    {"id": "Q09", "topic": "三重猎虫的三个名字",
-     "kws": ["亚尼姆斯", "格洛斯达", "福提士"], "hint": "超越之光/黑夜之志/尖盾——名字与归属"},
-    {"id": "Q10", "topic": "「无龙茶」与传奇调酒师「宽」",
-     "kws": ["无龙茶"], "hint": "是世界内传说/NPC 名，还是桌边玩梗？与跨团「宽」有关吗"},
-    {"id": "Q11", "topic": "「企鹅人」是种族名还是玩梗？",
-     "kws": ["企鹅"], "hint": "雪山土著"},
-    {"id": "Q12", "topic": "「哈基米」是冰晶圣兽的正式名吗？",
-     "kws": ["哈基米"], "hint": "雪山圣兽"},
-    {"id": "Q13", "topic": "「蓝丰炸药」是雪山巨像的名字吗？",
-     "kws": ["蓝丰"], "hint": "冰封巨像/可驾驶机甲"},
-    {"id": "Q14", "topic": "瘟疫骑士的红石「写者之实/血者之实」？",
-     "kws": ["写者之实", "血者之实", "写者"], "hint": "炼金术师用的红色石头，名称与作用"},
-    {"id": "Q15", "topic": "瘟疫骑士的正式名是「腐败的人」吗？",
-     "kws": ["腐败的人", "腐败"], "hint": "另：村庄死亡人数「几千人」的准确数字"},
-    {"id": "Q16", "topic": "段6 的「士兮」「高文」「敌者」「贤将」",
-     "kws": ["士兮", "高文", "敌者", "贤将"], "hint": "这些是专有名词吗？正确写法？"},
-    {"id": "Q17", "topic": "女巫「色蛮/瑟蛮」、同伴「西修/希秀」",
-     "kws": ["色蛮", "瑟蛮", "西修", "希秀"], "hint": "段3 过去/未来试炼里的两个名字"},
-    {"id": "Q18", "topic": "「背火箭的矮人」「六把圣剑」伏笔",
-     "kws": ["背火箭", "六个圣剑", "六把圣剑"], "hint": "段4 回收的早期伏笔，含义是什么"},
-    {"id": "Q19", "topic": "（已确认，留作复核）「地牙?」「劳昌?」",
-     "kws": ["地牙", "劳昌"], "hint": "上一轮已确认都指莉亚·岩心；听一下是否还有别的意思"},
-    {"id": "Q20", "topic": "（已裁决，留作复核）「天津诗情诗」",
-     "kws": ["天津诗情诗"], "hint": "已定为玩梗写法；对应的「均衡/世界意志」设定成立"},
+# <团名>：需要"听"的存疑条目（来自 .trpg/reports/<团名>_待确认.md）
+DEFAULT_QUIZ = [
+    {"id": "Q01", "topic": "某个专有名词的标准写法是什么？",
+     "kws": ["候选写法1", "候选写法2"],
+     "hint": "转写里并存几种写法，听一下哪一处为准"},
+    {"id": "Q02", "topic": "某个称呼指的是谁？",
+     "kws": ["称呼A", "称呼B"], "hint": "多人混用时请分别指认"},
 ]
 
 
@@ -131,7 +97,7 @@ def main() -> int:
     except (AttributeError, OSError, ValueError):
         pass
     ap = argparse.ArgumentParser(description="疑问片段核对工作流")
-    ap.add_argument("--group", default="圣剑英雄谭")
+    ap.add_argument("--group", required=True)
     ap.add_argument("--audio", help="音频路径（默认取该团素材里的 audio）")
     ap.add_argument("--transcript", help="转写稿路径")
     ap.add_argument("--quiz", help="外部疑问清单 JSON")
@@ -143,7 +109,7 @@ def main() -> int:
     ws = Workspace.from_config(cfg)
     group = args.group
 
-    quiz = QUIZ_SJT
+    quiz = DEFAULT_QUIZ
     if args.quiz:
         quiz = json.loads(Path(args.quiz).read_text(encoding="utf-8"))
 

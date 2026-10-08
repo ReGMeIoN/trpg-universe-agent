@@ -167,7 +167,7 @@ MERGE_HEADER = "===== 来源: {rel} | {msgs} 条消息 | {range} ====="
 def merge_textlogs(group: str, parts: list[tuple[str, dict[str, Any]]]) -> str:
     """把同一团的多个 QQ 导出合并成一份纯文本。
 
-    ⚠️ 必须合并而不是各自写同名文件: 一个团可能有多个导出(如「致无名者之声」正文+小群),
+    ⚠️ 必须合并而不是各自写同名文件: 一个团可能有多个导出(如某团的正群 + 小群),
     逐个覆盖会导致静默丢数据。
     """
     if len(parts) == 1:

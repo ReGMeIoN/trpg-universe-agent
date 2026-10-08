@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""通用版剧情编年史生成器（`_chronicle_sjt.py` 的团无关重构）。
+"""剧情编年史生成器（对任意团通用）。
 
 用法:
-    python tools/_chronicle.py --group "阴阳差事录 超自然怪谈"
+    python tools/_chronicle.py --group "我的团"
     python tools/_chronicle.py --group X --force --max-tokens 64000 --concurrency 6
 
-与 `_chronicle_sjt.py` 的区别:
+
 - 团名/段数/时长不再写死; 团专属口径从 `.trpg/prompts/chronicle_<团名>.md` 读取
   (没有该文件也能跑, 只是少了人名对照的硬约束)。
 - 段落按「段N」的数字排序(字符串排序会让 段10 排在 段2 前面)。

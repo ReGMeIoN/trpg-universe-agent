@@ -46,7 +46,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
   align-items:center;justify-content:center;gap:14px;background:#070b10;
   transition:opacity .7s ease,transform .7s ease}
 .boot.out{opacity:0;transform:scale(1.04);pointer-events:none}
-/* 启动徽记：原来是描线六边形，现在换成**杰克的头像**（六边形金框 + 扫描线 + 呼吸光晕） */
+/* 启动徽记：取一位有立绘的角色头像（六边形金框 + 扫描线 + 呼吸光晕） */
 .boot-mark{position:relative;width:150px;height:170px;clip-path:var(--hex);
   background:linear-gradient(160deg,#d8b25a,#6a5426 55%,#d8b25a);
   filter:drop-shadow(0 0 26px rgba(216,178,90,.4));

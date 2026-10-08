@@ -13,7 +13,7 @@ from PIL import Image
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-path = Path(sys.argv[1] if len(sys.argv) > 1 else '<工作区>/数据/头像/杰克.jpg')
+path = Path(sys.argv[1] if len(sys.argv) > 1 else '<工作区>/数据/头像/<角色>.jpg')
 img = Image.open(path).convert("RGB")
 w, h = img.size
 print(f"文件: {path.name}  {w}x{h}  比例 {w/h:.2f}")

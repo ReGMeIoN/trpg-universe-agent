@@ -5,12 +5,12 @@
 中心是主角，第一圈是直接关系人，第二圈是关系人的关系人；跨团邻居也会拉进来。
 
 用法:
-    python tools/_ego_net.py --name "于秀丽"                     # 默认 1 跳
-    python tools/_ego_net.py --name "于秀丽" --depth 2           # 两跳
-    python tools/_ego_net.py --id yy_yuxiuli --depth 2
-    python tools/_ego_net.py --name "杰克" --depth 2 --out 产出\\角色网_杰克.html
+    python tools/_ego_net.py --name "<角色名>"                     # 默认 1 跳
+    python tools/_ego_net.py --name "<角色名>" --depth 2           # 两跳
+    python tools/_ego_net.py --id <角色id> --depth 2
+    python tools/_ego_net.py --name "<角色>" --depth 2 --out 产出\\角色网_<角色>.html
     python tools/_ego_net.py --name "宽" --list                  # 同名多节点时先看候选
-    python tools/_ego_net.py --name "于秀丽" --stats-only        # 只打统计、不出图
+    python tools/_ego_net.py --name "<角色名>" --stats-only        # 只打统计、不出图
     python tools/_ego_net.py --rank 25                           # 全库关系度数排名
     python tools/_ego_net.py --name "宽" --show-kp               # 把 KP 等 in_graph:false 也算进网
 

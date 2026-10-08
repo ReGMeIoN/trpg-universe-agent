@@ -204,7 +204,7 @@ async function handleApi(request, env, url) {
 
     // 限流：同一 IP 10 分钟内最多 RATE_MAX 条
     const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || '';
-    const ipHash = await sha256hex('sjt|' + ip);
+    const ipHash = await sha256hex('wiki|' + ip);
     const since = new Date(Date.now() - RATE_WINDOW_MS).toISOString();
     const cnt = await DB.prepare(
       `SELECT COUNT(*) AS n FROM suggestions WHERE ip_hash=? AND created_at>?`)

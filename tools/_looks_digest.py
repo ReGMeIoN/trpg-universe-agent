@@ -5,7 +5,7 @@
 这个工具产出的就是「描述」的证据源，不生成任何图片。
 
 用法:
-    python tools/_looks_digest.py --group "阴阳差事录 超自然怪谈" --group "魔法少女育成计划 6" --out <file.md>
+    python tools/_looks_digest.py --group "我的团" --out <file.md>
 """
 from __future__ import annotations
 

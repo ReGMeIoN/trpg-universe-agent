@@ -1,0 +1,12 @@
+{
+  "_comment": "复制为 site_config.json 后按需填写。build_net_site.py 会读取它；文件不存在时按「全部团 + 自动配色」运行。",
+
+  "core_groups": [],
+  "typical_per_group": 3,
+
+  "group_color": {},
+  "default_color": "#8fa3b8",
+
+  "group_en": {},
+  "cover_slug": {}
+}

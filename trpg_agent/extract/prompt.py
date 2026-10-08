@@ -19,7 +19,7 @@ PATCH_CONTRACT = """
   "id_prefix": "<新角色的 id 前缀, 由调用方给出>",
   "characters": [
     {"id": "<前缀>_<拼音短名>", "name": "角色名", "aliases": ["别名"], "identity": "身份/定位",
-     "groups": ["<团名>"], "tags": ["PC"|"NPC"|"BOSS"|"跨团"|"待确认"],
+     "groups": ["<团名>"], "tags": ["PC"|"NPC"|"BOSS"|"待确认"],
      "played_by": "<PL 标准称呼或 待确认>", "note": "一句话概述(必须带剧情依据)",
      "events": [{"group": "<团名>", "items": ["事件(注明段号)"]}],
      "confirmed": true,
@@ -27,7 +27,7 @@ PATCH_CONTRACT = """
   ],
   "character_updates": [
     {"id": "<已入库角色的 id>", "add_groups": ["<团名>"], "append_note": "本团出场补充",
-     "add_events": [{"group": "<团名>", "items": ["..."]}], "add_tags": ["跨团"],
+     "add_events": [{"group": "<团名>", "items": ["..."]}]
      "set_played_by": null, "confirmed": true}
   ],
   "relations": [

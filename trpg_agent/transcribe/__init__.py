@@ -34,7 +34,7 @@ def _safe_tag(stem: str) -> str:
 def out_path_for(ws: Workspace, cfg: Config, group: str, part_tag: str | None = None) -> Path:
     """一个团一份转写稿; 同一团有多个录音时, 每份录音一份稿(part_tag=音频名)。
 
-    为什么需要 part_tag: 一个团带两个录音(如「魔法少女育成计划 6」的上下场)时,
+    为什么需要 part_tag: 一个团带两份录音(如某团的上下半场)时,
     若都写 <团>_转写.txt, 后一份会把前一份覆盖掉(实测过的坑, 2026-10-05)。
     多份稿子由 segment 的 join_transcripts 按时间偏移接成一条时间轴。
     """

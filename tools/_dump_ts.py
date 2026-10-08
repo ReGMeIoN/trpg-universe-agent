@@ -3,7 +3,7 @@
 
 用法:
     .venv\\Scripts\\python.exe tools\\_dump_ts.py <transcript> <start_s> <end_s>
-    .venv\\Scripts\\python.exe tools\\_dump_ts.py 素材\\圣剑英雄谭_转写.txt 18620 18700
+    .venv\\Scripts\\python.exe tools\\_dump_ts.py 素材\\<团名>_转写.txt 18620 18700
 """
 from __future__ import annotations
 

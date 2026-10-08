@@ -47,7 +47,7 @@ class DateGroupRange(Cfg):
 class DateGroupRule(Cfg):
     """把某个导出按日期区间拆成多个团。
 
-    例: 卧槽是伪人群_三团合集_*.json 含三个团, 按日期区间拆开。
+    例: 一次导出里含三个团时, 按日期区间拆开。
     区间外的消息不会被丢弃: 默认写进 <来源名>_未归类_聊天记录纯文本.txt 并告警,
     也可用 unmatched_group 显式指定归属。
     """
@@ -239,7 +239,7 @@ class ExtractCfg(Cfg):
     out_dir: str = "extracts"
     concurrency: int = 1          # Ollama 本地默认单并发; 云端可调到 4-8
     model_route: str = "extract"  # llm.routes 里的逻辑名
-    roster_scope: Literal["group_plus_cross", "all_names", "none"] = "group_plus_cross"
+    roster_scope: Literal["group", "all_names", "none"] = "group"
     max_segment_chars: int = 200000   # 单段输入上限(超出会报错, 提示调小切段窗口)
     skip_if_exists: bool = True
     retry: int = 2
@@ -269,8 +269,6 @@ class VisualizeCfg(Cfg):
     net_engine: Literal["legacy_svg", "echarts"] = "legacy_svg"
     pl_wall: bool = True
     chronicle: bool = True
-    jack_dossier: bool = True
-    jack_ids: list[str] = Field(default_factory=lambda: ["cross_jieke"])
 
 
 class ExportCfg(Cfg):

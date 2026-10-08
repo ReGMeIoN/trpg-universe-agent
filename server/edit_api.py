@@ -33,19 +33,7 @@ except ImportError:
 # ── 常量（与 worker/index.js 的白名单保持一致）──────────────
 MAX_TEXT = 4000
 MAX_PROFILE = 20000
-KIND_ORDER = ["PC", "NPC", "BOSS", "跨团", "KP"]
-DEFAULT_COLOR = "#8fa3b8"
-# 与 tools/build_net_site.py **完全一致**的建站口径
-CORE_GROUPS = ["阴阳差事录 超自然怪谈", "圣剑英雄谭", "魔法少女育成计划 6"]
-TYPICAL_PER_GROUP = 3
-GROUP_COLOR = {
-    "阴阳差事录 超自然怪谈": "#d94b3a", "圣剑英雄谭": "#d8b25a", "魔法少女育成计划 6": "#6fd6c0",
-    "魔法少女救赎线": "#c86fd6", "魔法少女木柜子": "#e08a5a", "魔法少女2": "#7fa8e8",
-    "魔法少女五": "#e0709a", "魔女裁判厅": "#9aa7b8", "无敌巨鲨大战奈亚拉托提普": "#4fa3c7",
-    "致无名者之声": "#6b7f9e", "恋爱与命运的不思议冒险？！": "#e0b0c0",
-    "卧槽是伪人群·伪人杀": "#b03a3a", "卧槽是伪人群·雪山狼人杀": "#8a3ab0",
-    "卧槽是伪人群·异世界大逃杀": "#3ab07a",
-}
+KIND_ORDER = ["PC", "NPC", "BOSS", "KP"]
 
 router = APIRouter()
 
@@ -53,7 +41,7 @@ router = APIRouter()
 def select_site_scope(chars: list, rels: list) -> tuple[list, list]:
     """站点口径。
 
-    ⚠️ **2026-10-06 主人拍板改成「全量」**：之前只挑 ~141 人（核心 + 邻居 + 跨团 + 每团代表），
+    ⚠️ 站点口径：**所有角色都上站**（含无立绘的剪影卡），
        结果"以前那些团的角色"根本不在站上。现在**所有角色都上站**，没立绘的也上（前端显示
        「未解封」剪影卡），所以这里只做一件事：**剔除 `confirmed: false` 的**（按项目铁律，
        未确认的角色不算存在）。关系同样只要两端都在的。
@@ -170,8 +158,6 @@ def kind_of(c: dict) -> str:
     tags = c.get("tags") or []
     if "KP" in tags:
         return "KP"
-    if "跨团" in tags:
-        return "跨团"
     if "BOSS" in tags:
         return "BOSS"
     if "PC" in tags:
@@ -194,7 +180,7 @@ def portrait_of(cid: str, portrait_dir: Path, avatar_dir: Path) -> dict | None:
     """立绘：**必须指向站点里真实存在的文件**。
 
     ⚠️ 踩过的坑：以前直接把生产库 `characters[].avatar` 字段（形如
-       `数据\\头像\\阴阳差事录_刘汤.jpg` 的 **Windows 路径**）吐给前端 → 全部 404。
+       `数据\\头像\\<团名>_<角色>.jpg` 这种 **Windows 路径**）吐给前端 → 全部 404。
        站点里的立绘是 build 时生成的 `<id>_t.jpg`（缩略）/ `<id>_f.jpg`（大图），
        所以这里按文件名去 assets/portraits 里找。
     """
@@ -830,7 +816,7 @@ async def upload_portrait(request: Request, x_edit_token: str | None = Header(de
     ⚠️ **2026-10-06 主人拍板：上传立绘不要口令**（"缺图的角色谁都能补一张"）。
        护栏：同 IP 限流（10 分钟 30 张）+ 12MB 上限 + 只认 png/jpg/webp + 落盘前真解码一次。
 
-    body: {id: "sjt_liya", data: "data:image/png;base64,...."}
+    body: {id: "<角色id>", data: "data:image/png;base64,...."}
     """
     if rate_limited(request, "upload", 30):
         return bad("上传太频繁了，歇一会儿再试", 429)

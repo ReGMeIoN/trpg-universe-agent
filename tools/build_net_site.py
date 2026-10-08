@@ -4,7 +4,7 @@
 设计参考：`素材\\明日方舟关系网效果图\\`（三层钻取：势力总览 → 卡片关系网 → 人物档案）。
 美术概念：「跑团档案库 · 观测终端」——冷色全息底 + 蓝图网格 + 每组一套主题色。
 
-选角范围：主人指定的 3 个「照片齐全」团（阴阳 / 圣剑 / 魔法少女育成计划 6）
+选角范围：由 tools/_netsite/site_config.json 的 core_groups 指定
           + 与它们有直接关系的跨团角色 + 各团代表人物（保证跨团/同位体视角有东西看）。
 
 用法:
@@ -29,54 +29,38 @@ SITE = ROOT / "site"
 SRC = ROOT / "tools" / "_netsite"                      # 前端模板（html/css/js）
 ASSETS = SITE / "assets" / "portraits"
 
-# 主人指定的三个团
-CORE_GROUPS = [
-    "\u9634\u9633\u5dee\u4e8b\u5f55 \u8d85\u81ea\u7136\u602a\u8c08",          # 阴阳差事录 超自然怪谈
-    "\u5723\u5251\u82f1\u96c4\u8c2d",                                            # 圣剑英雄谭
-    "\u9b54\u6cd5\u5c11\u5973\u80b2\u6210\u8ba1\u5212 6",                        # 魔法少女育成计划 6
-]
-# 每个「非核心团」额外带进来的代表人物数（按度数）
-TYPICAL_PER_GROUP = 3
+# ── 站点口径配置（可选）────────────────────────────────────────
+# 核心团名单与每组配色放在外部 JSON：tools/_netsite/site_config.json
+#   {"core_groups": ["团A", "团B"], "group_color": {"团A": "#d94b3a"},
+#    "typical_per_group": 3, "default_color": "#8fa3b8"}
+# 仓库只带 site_config.example.json；文件缺失时按「全部团 + 自动配色」运行。
+SITE_CFG_PATH = Path(__file__).resolve().parent / "_netsite" / "site_config.json"
+_SITE_CFG: dict = {}
+if SITE_CFG_PATH.is_file():
+    try:
+        _SITE_CFG = json.loads(SITE_CFG_PATH.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        _SITE_CFG = {}
 
-# 每组主题色（hue/sat/light 由前端算渐变；这里给主色）
-GROUP_COLOR = {
-    "\u9634\u9633\u5dee\u4e8b\u5f55 \u8d85\u81ea\u7136\u602a\u8c08": "#d94b3a",   # 朱砂
-    "\u5723\u5251\u82f1\u96c4\u8c2d": "#d8b25a",                                  # 羊皮纸金
-    "\u9b54\u6cd5\u5c11\u5973\u80b2\u6210\u8ba1\u5212 6": "#6fd6c0",               # 薄荷
-    "\u9b54\u6cd5\u5c11\u5973\u6551\u8d4e\u7ebf": "#c86fd6",                       # 紫
-    "\u9b54\u6cd5\u5c11\u5973\u6728\u67dc\u5b50": "#e08a5a",                       # 橙
-    "\u9b54\u6cd5\u5c11\u59732": "#7fa8e8",                                        # 蓝
-    "\u9b54\u6cd5\u5c11\u5973\u4e94": "#e0709a",                                   # 粉
-    "\u9b54\u5973\u88c1\u5224\u5385": "#9aa7b8",                                   # 冷灰
-    "\u65e0\u654c\u5de8\u9ca8\u5927\u6218\u5948\u4e9a\u62c9\u6258\u63d0\u666e": "#4fa3c7",  # 海蓝
-    "\u81f4\u65e0\u540d\u8005\u4e4b\u58f0": "#6b7f9e",
-    "\u604b\u7231\u4e0e\u547d\u8fd0\u7684\u4e0d\u601d\u8bae\u5192\u9669\uff01\uff1f": "#e0b0c0",
-    "\u5367\u69fd\u662f\u4f2a\u4eba\u7fa4\u00b7\u4f2a\u4eba\u6740": "#b03a3a",
-    "\u5367\u69fd\u662f\u4f2a\u4eba\u7fa4\u00b7\u96ea\u5c71\u72fc\u4eba\u6740": "#8a3ab0",
-    "\u5367\u69fd\u662f\u4f2a\u4eba\u7fa4\u00b7\u5f02\u4e16\u754c\u5927\u9003\u6740": "#3ab07a",
-}
-DEFAULT_COLOR = "#8fa3b8"
+CORE_GROUPS: list[str] = list(_SITE_CFG.get("core_groups") or [])
+TYPICAL_PER_GROUP: int = int(_SITE_CFG.get("typical_per_group") or 3)
+GROUP_COLOR: dict[str, str] = dict(_SITE_CFG.get("group_color") or {})
+DEFAULT_COLOR: str = _SITE_CFG.get("default_color") or "#8fa3b8"
 
-# 角色类型色条：PC 金 / NPC 灰 / BOSS 红 / 跨团 紫 / KP 蓝
-KIND_ORDER = ["PC", "NPC", "BOSS", "\u8de8\u56e2", "KP"]
+# 未显式配色时，按团名稳定散列取调色板（同一团名每次结果一致）
+_PALETTE = ["#d94b3a", "#d8b25a", "#6fd6c0", "#c86fd6", "#e08a5a",
+            "#7fa8e8", "#e0709a", "#9aa7b8", "#4fa3c7", "#6b7f9e"]
 
-# 团名 → 封面 slug（对应 novelai/trpg-gen25-covers.py 的 CASES）
-COVER_SLUG = {
-    "\u9b54\u6cd5\u5c11\u5973\u80b2\u6210\u8ba1\u5212 6": "mg6",
-    "\u9634\u9633\u5dee\u4e8b\u5f55 \u8d85\u81ea\u7136\u602a\u8c08": "yy",
-    "\u5723\u5251\u82f1\u96c4\u8c2d": "sjt",
-    "\u9b54\u6cd5\u5c11\u5973\u4e94": "mg5",
-    "\u65e0\u654c\u5de8\u9ca8\u5927\u6218\u5948\u4e9a\u62c9\u6258\u63d0\u666e": "js",
-    "\u9b54\u6cd5\u5c11\u5973\u6551\u8d4e\u7ebf": "mg3",
-    "\u9b54\u6cd5\u5c11\u5973\u6728\u67dc\u5b50": "mg4",
-    "\u604b\u7231\u4e0e\u547d\u8fd0\u7684\u4e0d\u601d\u8bae\u5192\u9669\uff1f\uff01": "love",
-    "\u9b54\u6cd5\u5c11\u5973\u0032": "mg2",
-    "\u5367\u69fd\u662f\u4f2a\u4eba\u7fa4\u00b7\u5f02\u4e16\u754c\u5927\u9003\u6740": "dw_isekai",
-    "\u5367\u69fd\u662f\u4f2a\u4eba\u7fa4\u00b7\u4f2a\u4eba\u6740": "dw_rensha",
-    "\u9b54\u5973\u88c1\u5224\u5385": "g2",
-    "\u81f4\u65e0\u540d\u8005\u4e4b\u58f0": "g3",
-    "\u5367\u69fd\u662f\u4f2a\u4eba\u7fa4\u00b7\u96ea\u5c71\u72fc\u4eba\u6740": "xs",
-}
+
+def group_color(g: str) -> str:
+    """显式配置优先；否则按团名稳定散列自动配色。"""
+    return GROUP_COLOR.get(g) or _PALETTE[sum(map(ord, str(g))) % len(_PALETTE)]
+
+# 角色类型色条：PC 金 / NPC 灰 / BOSS 红 / KP 蓝
+KIND_ORDER = ["PC", "NPC", "BOSS", "KP"]
+
+# 团名 → 封面 slug 映射（可选，来自 site_config.json 的 cover_slug）
+COVER_SLUG: dict[str, str] = dict(_SITE_CFG.get("cover_slug") or {})
 COVER_SRC = Path(os.environ.get("TRPG_NAI", "novelai") / 'archive' / '25-trpg-covers')
 COVER_PICKS = COVER_SRC / "_picks_cover.json"
 
@@ -119,7 +103,7 @@ def main() -> int:
         elif b in core and a not in core:
             nb.add(a)
     # ② 跨团角色
-    cross = {c["id"] for c in chars if "\u8de8\u56e2" in (c.get("tags") or [])}
+    cross: set[str] = set()   # 全量口径下不再区分跨团
     # ③ 每个非核心团的代表人物（按度数）
     others: dict[str, list[str]] = {}
     for c in chars:
@@ -231,7 +215,7 @@ def main() -> int:
         for g in (ch["groups"] or ["(\u672a\u5206\u7ec4)"]):
             gc[g] = gc.get(g, 0) + 1
     out_groups = [{"name": g, "count": n,
-                   "color": GROUP_COLOR.get(g, DEFAULT_COLOR),
+                   "color": group_color(g),
                    "core": g in CORE_GROUPS}
                   for g, n in sorted(gc.items(), key=lambda kv: (-kv[1], kv[0]))]
 
@@ -293,6 +277,8 @@ def main() -> int:
 
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "data.js").write_text(
+        # 把站点配置一并注入前端（前端 app.js 读 window.__SITE_CFG__）
+        "window.__SITE_CFG__=" + json.dumps(_SITE_CFG, ensure_ascii=False) + ";\n"
         "window.NET=" + json.dumps(
             {"generated": datetime.now().strftime("%Y-%m-%d %H:%M"),
              "groups": out_groups, "chars": out_chars, "rels": out_rels,

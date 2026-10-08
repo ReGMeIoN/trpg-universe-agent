@@ -59,10 +59,10 @@
 
 ```bash
 # 1) 把项目传上去（排除虚拟环境与临时文件）
-rsync -av --exclude .venv --exclude .tmp --exclude novelai/archive ./ user@server:/opt/trpg-wiki/
+rsync -av --exclude .venv --exclude .tmp --exclude novelai/archive ./ user@server:/opt/trpg-universe/
 
 # 2) 服务器上跑部署脚本（装依赖 + 建 systemd 服务 + 生成口令 + 建每日备份 cron）
-sudo bash /opt/trpg-wiki/server/deploy-debian.sh /opt/trpg-wiki
+sudo bash /opt/trpg-universe/server/deploy-debian.sh /opt/trpg-universe
 ```
 
 脚本**不会**动你的 nginx/caddy —— 跑完会把该粘的配置直接打印出来（两种都给）。
@@ -86,13 +86,13 @@ Copy-Item "<工作区>\数据\relations.json"  "server\data\relations.json"  -Fo
 |---|---|
 | **访问地址** | **<http://<服务器IP>:8080/>** ← ⚠️ 走 **8080**，不是 80 |
 | 系统 | Debian 12.1 · 2 核 / 2GB 内存 / 30GB 磁盘 |
-| 应用目录 | `/opt/trpg-wiki` |
-| 服务 | `systemctl status trpg-wiki`（uvicorn 绑 `127.0.0.1:8788`，实测内存 **34MB**） |
+| 应用目录 | `/opt/trpg-universe` |
+| 服务 | `systemctl status trpg-universe`（uvicorn 绑 `127.0.0.1:8788`，实测内存 **34MB**） |
 | 反向代理 | nginx（同时监听 `0.0.0.0:80` **和** `:8080`） |
-| 数据 | `/opt/trpg-wiki/server/data/*.json`（266 角色 / 461 关系） |
-| 版本历史 | `/opt/trpg-wiki/server/wiki.db` |
-| **编辑口令** | 服务器 `/opt/trpg-wiki/.env` 里的 `EDIT_TOKEN`（部署脚本生成时打印过一次） |
-| 每日备份 | `/etc/cron.daily/trpg-wiki-backup` → `/opt/trpg-wiki/backups/`（保留 30 天） |
+| 数据 | `/opt/trpg-universe/server/data/*.json`（角色 / 关系） |
+| 版本历史 | `/opt/trpg-universe/server/wiki.db` |
+| **编辑口令** | 服务器 `/opt/trpg-universe/.env` 里的 `EDIT_TOKEN`（部署脚本生成时打印过一次） |
+| 每日备份 | `/etc/cron.daily/trpg-universe-backup` → `/opt/trpg-universe/backups/`（保留 30 天） |
 
 ### ⚠️ 为什么是 8080 而不是 80
 
@@ -124,7 +124,7 @@ Copy-Item "<工作区>\数据\relations.json"  "server\data\relations.json"  -Fo
    → 已把选角逻辑搬进 `server/edit_api.py` 的 `select_site_scope()`，**口径必须和
      `tools/build_net_site.py` 保持一致**，改一边就得改另一边。
 2. **`avatar` 直接把生产库字段吐给前端** —— 生产库里是
-   `数据\头像\阴阳差事录_刘汤.jpg` 这种 **Windows 路径**，前端拿去当 URL 一定 404。
+   `数据\头像\<团名>_<角色>.jpg` 这种 **Windows 路径**，前端拿去当 URL 一定 404。
    站点里的图是 build 时生成的 `<id>_t.jpg` / `<id>_f.jpg`。
    → 已改成 `portrait_of()`：按文件名去 `assets/portraits/` 里找，**找不到就返回 `null`**
      （前端显示「未解封」剪影卡，比破图体面）。
@@ -198,7 +198,7 @@ chmod 600 /opt/trpg-agent/.env
 
 ### 3. 跑成系统服务（systemd）
 
-`/etc/systemd/system/trpg-wiki.service`：
+`/etc/systemd/system/trpg-universe.service`：
 
 ```ini
 [Unit]
@@ -221,8 +221,8 @@ WantedBy=multi-user.target
 ```bash
 sudo chown -R www-data:www-data /opt/trpg-agent/server   # 让服务能写 sqlite
 sudo systemctl daemon-reload
-sudo systemctl enable --now trpg-wiki
-sudo systemctl status trpg-wiki
+sudo systemctl enable --now trpg-universe
+sudo systemctl status trpg-universe
 ```
 
 > 我把 uvicorn 绑在 `127.0.0.1:8788`，**外面只暴露 nginx/caddy**。
@@ -246,7 +246,7 @@ wiki.example.com {
 }
 ```
 
-**nginx** —— `/etc/nginx/sites-available/trpg-wiki`：
+**nginx** —— `/etc/nginx/sites-available/trpg-universe`：
 
 ```nginx
 server {
@@ -282,7 +282,7 @@ server {
 ```
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/trpg-wiki /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/trpg-universe /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 sudo certbot --nginx -d wiki.example.com      # 证书
 ```
@@ -295,7 +295,7 @@ sudo certbot --nginx -d wiki.example.com      # 证书
 
 ```powershell
 cd <仓库>
-npx --yes wrangler@latest d1 export sjt-wiki --remote --output wiki_dump.sql
+npx --yes wrangler@latest d1 export <D1库名> --remote --output wiki_dump.sql
 ```
 
 `wiki_dump.sql` 是标准 SQL（建表 + INSERT），**直接喂 sqlite3 就行**：
@@ -372,7 +372,7 @@ rsync -av --delete site/ user@server:/opt/trpg-agent/site/
 所以你可以：
 - **先自托管试水**，稳定后停掉 Cloudflare；或者
 - **Cloudflare 当主力、服务器当国内镜像**（但数据要单向同步，别双写）；
-- 想搬回去：`wrangler d1 execute sjt-wiki --remote --file=<sqlite 导出>` 即可反向迁移。
+- 想搬回去：`wrangler d1 execute <D1库名> --remote --file=<sqlite 导出>` 即可反向迁移。
 
 > 前端的 API 地址是**同源相对路径**（`/api/...`），所以换后端**不用改前端一个字**。
 > 只有 `wiki-boot.js` 的 `/api/overrides` 失败时会静默降级 —— 没有后端也能正常浏览、搜索、用独立链接。

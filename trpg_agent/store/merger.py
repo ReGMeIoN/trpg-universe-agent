@@ -15,8 +15,8 @@
      "confirmed": true}
   ],
   "character_updates": [
-    {"id": "cross_heiyi", "add_groups": ["星海列车"], "append_note": "...",
-     "add_events": [{"group": "星海列车", "items": ["..."]}], "add_tags": ["跨团"],
+    {"id": "xh_heiyi", "add_groups": ["星海列车"], "append_note": "...",
+     "add_events": [{"group": "星海列车", "items": ["..."]}]
      "set_played_by": null, "confirmed": true}
   ],
   "relations": [
@@ -244,8 +244,8 @@ def build_plan(
             plan.normalized.append({"field": "played_by", "where": cid, "old": raw.get("played_by"), "new": pb})
         if pb is not None:
             c["played_by"] = pb
-        if not cid.startswith(prefix) and not cid.startswith("cross_"):
-            plan.warnings.append(f"{cid} 不符合团前缀 {prefix}_ 规范 (既有 cross_ 前缀除外)")
+        if not cid.startswith(prefix):
+            plan.warnings.append(f"{cid} 不符合团前缀 {prefix}_ 规范")
         new_ids.add(cid)
         plan.new_characters.append(c)
 

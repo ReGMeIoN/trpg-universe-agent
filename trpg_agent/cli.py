@@ -958,7 +958,7 @@ def visualize(
     all_groups: bool = typer.Option(False, "--all", help="为所有团都出关系图"),
     json_out: bool = typer.Option(False, "--json"),
 ) -> None:
-    """M6 可视化: 团关系图 HTML + 关系网 md + PL 画像墙 + 杰克档案/宇宙总览。"""
+    """M6 可视化: 团关系图 HTML + 关系网 md + PL 画像墙 + 宇宙总览。"""
     cfg, wsp = _ctx(config, ws, "visualize")
     log.step(f"visualize · {wsp.root}")
     try:

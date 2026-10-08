@@ -112,8 +112,8 @@ def main() -> int:
     rels = json.loads(ws.data_file("relations").read_text(encoding="utf-8"))["relations"]
     check("回填后 5 角色 / 3 关系", len(chars) == 5 and len(rels) == 3, f"{len(chars)}/{len(rels)}")
     check("备份已生成", len(r2["backups"]) == 4, str(len(r2["backups"])))
-    heiyi = next(c for c in chars if c["id"] == "cross_heiyi")
-    check("跨团角色 groups 追加", "星海列车" in heiyi["groups"], str(heiyi["groups"]))
+    heiyi = next(c for c in chars if c["id"] == "xh_heiyi")
+    check("角色 groups 追加", "星海列车" in heiyi["groups"], str(heiyi["groups"]))
     tieya = next(c for c in chars if c["id"] == "xh_tieya")
     check("归一: 老鸭 -> 老鸦", tieya["played_by"] == "老鸦", tieya["played_by"])
     check("未确认角色未入库", all(c["id"] != "xh_shenmi" for c in chars))
@@ -133,7 +133,7 @@ def main() -> int:
     check("KB 包生成", len(e["written"]) >= 4, str(e["written"]))
     kb = ws.output / cfg.export.out_dir
     check("KB 含总览/杰克/PL/团文档",
-          all((kb / n).is_file() for n in ("00_跑团宇宙总览.md", "00b_杰克档案.md",
+          all((kb / n).is_file() for n in ("00_跑团宇宙总览.md",
                                            "00c_PL档案.md", "星海列车.md")),
           str(sorted(p.name for p in kb.glob("*.md"))))
 
