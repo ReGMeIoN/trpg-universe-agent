@@ -1,4 +1,4 @@
-# TRPG-Universe Agent 🐳
+# TRPG-Universe Agent 
 
 > 把一场场跑团录音 / 聊天导出，酿成一册**可检索、可浏览、可发布**的人物关系档案。
 >
