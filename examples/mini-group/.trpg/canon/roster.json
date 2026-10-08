@@ -1,0 +1,23 @@
+{
+  "generated": "2026-09-13 21:38:30",
+  "count": 1,
+  "characters": [
+    {
+      "id": "cross_heiyi",
+      "name": "黑衣客",
+      "aliases": [
+        "提灯的黑衣人"
+      ],
+      "groups": [
+        "旧站纪事"
+      ],
+      "tags": [
+        "NPC",
+        "跨团",
+        "跨团常驻"
+      ],
+      "played_by": "阿澈",
+      "is_cross": true
+    }
+  ]
+}

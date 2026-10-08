@@ -1,0 +1,68 @@
+# ══════════════════════════════════════════════════════
+#  TRPG-Universe Agent · .gitignore
+#  原则：凭据与私有配置绝不入库；运行产物与大件素材一律排除
+# ══════════════════════════════════════════════════════
+
+# ── 1. 凭据 / 私有配置（最重要，勿删）──────────────────
+.dev.vars
+*.token
+.trpg/wiki_admin_token.txt
+/config.yaml
+/wrangler.jsonc
+/wrangler.jsonc.wrangler-tmp
+/wrangler.jsonc.bak_*
+config.yaml.bak_*
+/项目状态交接.md
+/docs/上传GitHub-交接手册.md
+/docs/发布就绪评估-2026-10-08.md
+
+# ── 2. 本机环境 ────────────────────────────────────────
+.venv/
+.boot/
+.tmp/
+.wrangler/
+msedgedriver/
+__pycache__/
+*.pyc
+*.pyo
+
+# ── 3. 生产工作区（根级，含隐私素材与生产库）──────────
+/.trpg/
+/数据/
+/产出/
+/素材/
+/归档/
+
+# ── 4. 示例团：保留契约资产（canon/patches/fixtures），丢运行态 ──
+examples/**/.trpg/state/
+examples/**/.trpg/jobs/
+examples/**/.trpg/logs/
+examples/**/.trpg/staging/
+examples/**/.trpg/reports/
+examples/**/.trpg/normalized/
+examples/**/.trpg/shadow_ws/
+examples/**/.trpg/manifest.json
+examples/**/素材/segments/
+examples/**/*.bak_*
+
+# ── 5. 构建产物 / 大件 ─────────────────────────────────
+/site/
+site_archived_book_20261005/
+web/node_modules/
+web/dist/
+server/data/
+server/wiki.db
+*.db
+*.sqlite3
+*.mp3
+*.m4a
+*.wav
+*.7z
+*.zip
+
+# ── 6. 杂项 ────────────────────────────────────────────
+*.log
+*.err
+*.bak_*
+.DS_Store
+Thumbs.db

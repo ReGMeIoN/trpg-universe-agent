@@ -1,0 +1,8 @@
+{
+  "group": "星海列车",
+  "_说明": [
+    "action 取值: accept(确认入库) / reject(驳回, 留在待确认) / set(改字段) / merge(称呼归一)",
+    "accept/reject/set 需填 target + index; merge 需填 canonical + variant"
+  ],
+  "decisions": []
+}

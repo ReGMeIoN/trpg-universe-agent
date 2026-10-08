@@ -1,0 +1,187 @@
+# ══════════════════════════════════════════════════════
+#  TRPG-Universe Agent · 配置示例 (v0.1)
+#  用法: 复制为 config.yaml 后按需修改
+#      cp config.example.yaml config.yaml
+#  全部可调项都在这里; 切库只改 workspace.root 一行。
+#  密钥只从环境变量读(api_key_env), 不写进本文件。
+# ══════════════════════════════════════════════════════
+
+version: 1
+
+workspace:
+  root: "./workspace"                     # 一个工作区 = 一个宇宙库
+  production_root: "./workspace"          # 与 root 相同且未开 allow_production_write 时, store --apply 会被拒
+  data_dir: 数据
+  output_dir: 产出
+  material_dir: 素材
+  work_dir: .trpg
+  backup_keep: 10
+  allow_production_write: false           # 生产库回填闸门; 也可用 --allow-production 单次放行
+
+ingest:
+  exclude_globs:
+    - "_scripts/**"
+    - "_whisper_models/**"
+    - "qq-chat-exporter/**"
+    - "QQDecrypt/**"
+    - "nt_msg_db_util/**"
+    - "napcat/**"
+    - "NapCat*/**"
+    - "_headless_profile*/**"
+    - "_test/**"
+    - "segments/**"
+    - "提炼/**"
+    - "*提炼*.md"
+    - "*_段*.md"
+    - "*_state.txt"
+    - "*.bak_*"
+    - "*.log"
+    - "*.err"
+    - "napcat_*"
+    - "_test.*"
+    - "*.py"
+    - "*.ps1"
+    - "*.mjs"
+    - "*.zip"
+  hash_algo: sha256
+  normalized_dir: normalized
+
+  # 已知团名(群名即团名): 文件名/目录名里出现即归属该团, 最长匹配优先
+  # 按需改成你自己的团名; 示例团见 examples/mini-group
+  known_groups:
+    - "示例团·星海列车"
+
+  # 目录名/文件前缀 -> 规范团名
+  group_aliases: {}
+  group_rules: []            # [{glob: "某团_小群_*", group: "某团"}]
+
+  # 一次导出含多个团: 按日期区间拆开(区间外消息单独归入"未归类", 绝不丢弃)
+  date_group_rules: []
+  #  - source_glob: "某群_多团合集_*.json"
+  #    ranges:
+  #      - {start: "2024-07-30", end: "2024-08-03", group: "某团·第一季"}
+  #    unmatched_group: "某群·未归类"
+
+  # 人手转出、已被拆团规则取代的整份纯文本: 标记停用, 不参与切段
+  supersede_globs: []
+
+llm:
+  default: local
+  providers:
+    local:                   # 本地优先, 数据不出机
+      type: ollama
+      base_url: "http://127.0.0.1:11434"
+      model: "qwen2.5:14b"
+      num_parallel: 1        # Ollama 默认单并发; 提高需同时设 OLLAMA_NUM_PARALLEL
+      num_ctx: 32768         # ⚠️ 必须显式设置: Ollama 按显存给默认值(实测 4096)会截断长段
+      temperature: 0.2
+      max_tokens: 8000
+
+    # 云端提炼(OpenAI 兼容端点均可, 例: DeepSeek / OpenAI / 各类中转)
+    main:
+      type: openai
+      base_url: "https://api.deepseek.com/v1"
+      model: "deepseek-chat"
+      api_key_env: TRPG_LLM_KEY     # ← 密钥只从环境变量读, 不写进本文件
+      json_mode: json_object        # 部分端点不支持 json_schema(400), json_object 兼容性更好
+      max_tokens: 32000
+      num_parallel: 8
+      temperature: 0.2
+  routes:
+    extract: main                   # 关系提炼走哪个后端
+    segment_title: local
+    filter: local
+
+embedding:
+  provider: ollama
+  base_url: "http://127.0.0.1:11434"
+  model: nomic-embed-text
+
+asr:
+  engine: faster_whisper
+  # ⚠️ initial_prompt 会进断点指纹 -> 换团时必须先把这个团的转写跑完再改
+  model_path: "./workspace/素材/_whisper_models/large-v3"
+  device: cuda                      # 无独显改 cpu
+  compute_type: float16             # cpu 请改 int8
+  cpu_threads: 8
+  language: zh
+  # 团专属词表: 角色名/专有名词进 prompt 能显著降低 ASR 错字(名字错一个, 后面归一化就要人工救)
+  # ⚠️ 这里放"当前要跑的那个团"的词表; 每团用过的原文都存档在
+  #    .trpg/prompts/asr_<团名>.txt(复现/续跑时按它设回即可), 或用 --prompt 按次覆盖。
+  initial_prompt: "以下是普通话的跑团游戏对话记录，包含主持人与玩家的角色扮演发言。角色名：甲、乙、丙。术语：跑团、检定、先攻。"
+  beam_size: 5
+  # 批式推理实测劣于逐批推理(clip 截断 30s + 更慢 + 幻觉), 故关闭; 详见 config.py 注释
+  batched: false
+  batch_size: 8
+  # 关掉跨窗口条件: 长录音+噪声下更稳, 不易复读; 代价是丢了跨窗上下文
+  condition_on_previous_text: false
+  # 窗口化流式解码: 每 30 分钟一个窗口(内存约 115MB), 避免整段 STFT 的 OOM
+  window_s: 1800
+  seek_on_resume: true       # 续跑时 seek 到断点窗口, 省去重新解码
+  vad:
+    min_silence_ms: 600
+    speech_pad_ms: 400
+    gap_break_s: 60
+  batch:
+    max_speech_s: 780      # 每批累计语音上限(13 分钟)
+    max_span_s: 1800       # 每批时间跨度上限(30 分钟)
+  smoke_seconds: 0
+  resume: true
+  out_dir: 素材
+  out_suffix: _转写
+  state_every: 50
+
+segment:
+  strategy: time_window    # transcript 用 time_window; qq_text 自动用 date; raw 用 line_chunk
+  window_s: 3770           # 63 分钟一段
+  max_lines: 40000
+  date_merge_max_lines: 3600
+  # 派生产物写运行态目录, 与手工段文件隔离
+  out_dir: ".trpg/segments"
+  inputs: [transcript, qq_text, raw_text]
+
+review:
+  require_confirm: true
+  decisions_dir: review
+
+extract:
+  template: templates/extract_template.md
+  consolidate_template: templates/consolidate_template.md
+  out_dir: extracts
+  concurrency: 6             # 云端并发; 本地 Ollama 请改回 1
+  model_route: extract       # 对应 llm.routes 的逻辑名
+  roster_scope: group_plus_cross   # 注入名单: 本团相关+跨团常驻给详情, 其余只给名字
+  max_segment_chars: 200000
+  skip_if_exists: true
+  retry: 2
+  consolidation_max_output_tokens: 32000   # 汇总是大输出, 推理型模型要留足预算
+
+store:
+  strictness: strict       # 只写明确项; 存疑进待确认
+  backup: true
+  write_report: true
+  report_dir: reports
+  dangling_ref: warn       # 既有库存在脏引用, 默认只警告
+  normalization_file: canon/naming.json
+  id_prefix_fallback: pinyin
+  # 团名 -> id 前缀(新增团请在此登记)
+  id_prefix_map:
+    "示例团·星海列车": xh
+
+visualize:
+  net_enabled: true
+  net_engine: legacy_svg   # 沿用已验证的 SVG 群像模板; echarts 待评估
+  pl_wall: true
+  chronicle: true
+  jack_dossier: true
+  jack_ids: [cross_jieke]
+
+export:
+  kb_pack: true
+  out_dir: astrbot知识库导入
+  push_rag: false
+
+jobs:
+  backend: detached
+  log_level: INFO
+  on_finish: none

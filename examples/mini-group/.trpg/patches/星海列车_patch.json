@@ -1,0 +1,151 @@
+{
+  "group": "星海列车",
+  "id_prefix": "xh",
+  "_meta": {
+    "author": "示例夹具(人工编写, 受保护路径)",
+    "note": "纯虚构内容。这是测试与演示用的**固定输入**; 跑 extract 会写到 .trpg/patches/ 下的工作副本, 不会动本文件。",
+    "source_segments": [
+      ".trpg/segments/星海列车_段1_0h00m-0h04m.txt",
+      ".trpg/segments/星海列车_段2_1h03m-1h05m.txt",
+      ".trpg/segments/星海列车_段3_2h06m-2h07m.txt"
+    ]
+  },
+  "characters": [
+    {
+      "id": "xh_linhai",
+      "name": "临海",
+      "aliases": ["海哥", "没票的乘客"],
+      "identity": "PC；冷静型调查者，先确认细节再行动",
+      "groups": ["星海列车"],
+      "tags": ["PC"],
+      "played_by": "阿蓝（临海的玩家）",
+      "note": "段1 检查信封与齿轮刮痕判断车票来源；段2 决定去车厢连接处查看；段3 选择下车并断后。",
+      "events": [{"group": "星海列车", "items": [
+        "检查信封上的旧齿轮，发现边缘有新撬痕（段1）",
+        "无风站遇到黑衣客并追问其身份（段2）",
+        "终点站选择下车，安排铁鸦先行、自己与弥月断后（段3）"
+      ]}],
+      "confirmed": true
+    },
+    {
+      "id": "xh_miyue",
+      "name": "弥月",
+      "aliases": ["月", "带地图册的乘客"],
+      "identity": "PC；记录者，随身携带地图册比对线索",
+      "groups": ["星海列车"],
+      "tags": ["PC"],
+      "played_by": "小满（弥月的玩家）",
+      "note": "段1 在地图册空白处发现三个铅笔点；段2 记下黑衣客灯罩刻字；段3 追问留在车上是否会忘记自己。",
+      "events": [{"group": "星海列车", "items": [
+        "在地图册空白处发现三个铅笔点（段1）",
+        "记录黑衣客灯罩上叠印的地名（段2）"
+      ]}],
+      "confirmed": true
+    },
+    {
+      "id": "xh_tieya",
+      "name": "铁鸦",
+      "aliases": ["鸦", "喝凉茶的乘客"],
+      "identity": "PC；怀疑派，先从动机推断对手",
+      "groups": ["星海列车"],
+      "tags": ["PC"],
+      "played_by": "老鸭",
+      "note": "段1 建议先侦查车厢；段2 从被改的站牌日期推断有人先到；段3 判断名单划名是提前写好谁会消失。",
+      "events": [{"group": "星海列车", "items": [
+        "主张先侦查车厢再动制动管（段1）",
+        "指出名单划名意味着结局被提前写下（段3）"
+      ]}],
+      "confirmed": true
+    },
+    {
+      "id": "xh_bailu",
+      "name": "白露",
+      "aliases": ["列车长", "提灯的乘务员"],
+      "identity": "NPC；星海列车列车长，制服第二颗扣子是黑色的",
+      "groups": ["星海列车"],
+      "tags": ["NPC"],
+      "played_by": "阿澈",
+      "note": "段1 告知车票非本列车发行、碎冰港候车棚三年前已拆；段2 无风站广播并锁回包厢；段3 宣布终点站。",
+      "events": [{"group": "星海列车", "items": [
+        "指出玩家车票非本列车发行（段1）",
+        "无风站广播「不办理乘降」并锁回乘客（段2）"
+      ]}],
+      "confirmed": true
+    },
+    {
+      "id": "xh_shenmi",
+      "name": "神秘乘客",
+      "identity": "待确认：仅段2 走廊脚步声出现，未能确认是否为独立角色",
+      "groups": ["星海列车"],
+      "tags": ["待确认"],
+      "played_by": "待确认",
+      "note": "转写存疑，未写死。",
+      "confirmed": false,
+      "pending_reason": "段2 只有脚步声与「咔」一声，无法确认是白露还是另一名乘客",
+      "segment": "段2"
+    }
+  ],
+  "character_updates": [
+    {
+      "id": "cross_heiyi",
+      "add_groups": ["星海列车"],
+      "append_note": "星海列车（段2）在无风站长椅上等候玩家，说出「上一次也是四个人，三个人下了车」；灯罩刻有叠印地名。",
+      "add_events": [{"group": "星海列车", "items": [
+        "无风站长椅登场，自称「这条线的常客」，未透露真名（段2）",
+        "灯罩刻字被弥月记录，作为跨团比对线索（段2）"
+      ]}],
+      "add_tags": ["跨团"],
+      "confirmed": true
+    }
+  ],
+  "relations": [
+    {
+      "from": "xh_linhai", "to": "xh_miyue", "type": "同伴/互相依赖", "strength": "强",
+      "event": "段1 临海让弥月紧跟其后；段3 两人共同断后下车", "confirmed": true
+    },
+    {
+      "from": "xh_linhai", "to": "xh_tieya", "type": "分歧/互相提防", "strength": "中",
+      "event": "段1 临海主张去看连接处、铁鸦主张守包厢；段3 名单划名被临海隐瞒", "confirmed": true
+    },
+    {
+      "from": "xh_bailu", "to": "xh_linhai", "type": "契约/引路", "strength": "强",
+      "event": "段1 白露以「别在无风站下车」作为交换条件；段3 把决定权交回临海", "confirmed": true
+    },
+    {
+      "from": "cross_heiyi", "to": "xh_bailu", "type": "疑似旧识", "strength": "弱",
+      "event": "段2 白露在黑衣客出现后立即广播锁回乘客，动机不明",
+      "confirmed": false,
+      "pending_reason": "白露锁门与黑衣客登场只是时间相邻，无直接对话证据"
+    }
+  ],
+  "players": [
+    {
+      "uid": "u_ex_blue", "qq_name": "阿蓝", "real_alias": "阿蓝",
+      "roles": [
+        {"group": "星海列车", "role": "PC：临海"},
+        {"group": "星海列车外传", "role": "KP"}
+      ],
+      "note": "示例团虚构玩家，用于演示 players.json 写入", "confirmed": true
+    }
+  ],
+  "pl_profiles": [
+    {
+      "uid": "u_ex_blue", "name": "阿蓝", "aliases": ["蓝哥"],
+      "groups_played": ["星海列车(临海)", "星海列车外传(KP)"],
+      "cards": [
+        {"group": "星海列车", "role": "临海（调查者）"},
+        {"group": "星海列车外传", "role": "KP（兼黑衣客）"}
+      ],
+      "speaking_style": "语速慢，喜欢先复述对方关键词再发问（「也就是说……」）",
+      "rp_style": "细节派：优先确认物理证据再决定是否冒险",
+      "impressions": ["队伍的决策锚点", "很少抢戏但每次发言都推动线索"],
+      "highlights": ["段1 从齿轮刮痕推断车票来源", "段3 决定下车并主动断后"],
+      "confirmed": true
+    }
+  ],
+  "pending": [
+    {"item": "白露与黑衣客是否为旧识（段2 锁门动机）", "reason": "仅时间相邻，缺直接对话证据", "segment": "段2"},
+    {"item": "灯罩上的叠印地名具体指向哪些团", "reason": "转写未给出完整地名，需对照其它团档案", "segment": "段2"},
+    {"item": "小满（场外）点外卖的闲聊内容", "reason": "场外闲聊，按铁律不入库", "segment": "段1"}
+  ]
+}

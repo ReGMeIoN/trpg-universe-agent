@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>跑团宇宙 · 角色关系网</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── 启动：加载动画 ─────────────────────────────────────────── -->
+<div class="boot" id="boot">
+  <div class="boot-mark" id="bootMark">
+    <span class="bm-in" id="bmIn"></span>
+    <i class="bm-scan"></i>
+  </div>
+  <div class="boot-title">跑团宇宙</div>
+  <div class="boot-en">TRPG UNIVERSE ARCHIVE</div>
+  <div class="boot-bar"><i id="bootBar"></i></div>
+  <div class="boot-log" id="bootLog">初始化档案库…</div>
+</div>
+
+<!-- ── 主界面（总 UI）───────────────────────────────────────── -->
+<div class="home" id="home">
+  <div class="home-inner">
+    <div class="home-kicker">CHARACTER RELATIONSHIP ARCHIVE</div>
+    <h1 class="home-title">跑团宇宙</h1>
+    <div class="home-sub">角色关系档案库 · 跨团人物网络</div>
+
+    <div class="home-stats" id="homeStats"></div>
+
+    <div class="home-modes">
+      <button class="mode" data-p="group">
+        <span class="mi">◈</span>
+        <b>按团</b>
+        <i>CAMPAIGN</i>
+        <em>14 个团，每团一张封面</em>
+      </button>
+      <button class="mode" data-p="creator">
+        <span class="mi">✦</span>
+        <b>按创作者</b>
+        <i>CREATOR</i>
+        <em>谁写的卡、谁演的</em>
+      </button>
+      <button class="mode" data-p="kind">
+        <span class="mi">◇</span>
+        <b>按类型</b>
+        <i>ARCHETYPE</i>
+        <em>PC / NPC / BOSS / 跨团</em>
+      </button>
+    </div>
+
+    <button class="home-enter" id="homeEnter">进入档案库</button>
+    <div class="home-quick">
+      <button class="hq-btn" id="homePortal">☰ 门户</button>
+      <button class="hq-btn" id="homeAdd">＋ 新增条目</button>
+    </div>
+    <div class="home-foot">由 trpg-agent 生成 · <span id="homeGen"></span></div>
+  </div>
+</div>
+
+<!-- ── 背景层：冷色全息底 + 蓝图网格 + 扫描线 + 水印 ───────────── -->
+<div class="bg">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="bg-scan"></div>
+  <div class="bg-mark" id="bgMark">TRPG UNIVERSE</div>
+</div>
+
+<!-- ── 顶栏 ──────────────────────────────────────────────────── -->
+<header class="topbar">
+  <button class="nav-btn" id="btnBack" title="返回上一级">◀</button>
+  <div class="brand">
+    <span class="brand-cn">跑团宇宙</span>
+    <span class="brand-en">TRPG&nbsp;UNIVERSE&nbsp;/&nbsp;CHARACTER&nbsp;NETWORK</span>
+  </div>
+  <nav class="crumb" id="crumb"></nav>
+  <div class="spacer"></div>
+  <div class="persp" id="persp">
+    <button data-p="group" class="on">按团</button>
+    <button data-p="creator">按创作者</button>
+    <button data-p="kind">按类型</button>
+  </div>
+  <button class="nav-btn" id="btnZoomOut" title="缩小">−</button>
+  <button class="nav-btn" id="btnZoomIn" title="放大">+</button>
+  <button class="nav-btn" id="btnFit" title="适应窗口">⤢</button>
+  <button class="nav-btn" id="btnUndo" title="撤销上一次拖动（Ctrl+Z）">↶</button>
+  <button class="nav-btn" id="btnReset" title="复位排版：清掉所有手工挪动，回到自动位置">⤾</button>
+  <button class="nav-btn" id="btnSearch" title="搜索（Ctrl+K 或 /）">🔍</button>
+  <button class="nav-btn" id="btnPortal" title="门户：最近改动 / 新增条目 / 公告">☰</button>
+  <button class="nav-btn" id="btnAdd" title="新增条目（不用口令）">＋</button>
+  <button class="nav-btn" id="btnHelp" title="操作说明">?</button>
+</header>
+
+<!-- ── 舞台 ──────────────────────────────────────────────────── -->
+<main id="stage">
+  <div id="world">
+    <svg id="links" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="hulls"></div>
+    <div id="cards"></div>
+    <div id="labels"></div>
+  </div>
+  <div id="hint" class="hint"></div>
+</main>
+
+<!-- ── 左下图例 ──────────────────────────────────────────────── -->
+<aside class="legend" id="legend">
+  <div class="lg-title">关系强度</div>
+  <div class="lg-row"><i class="ln s3"></i>强</div>
+  <div class="lg-row"><i class="ln s2"></i>中</div>
+  <div class="lg-row"><i class="ln s1"></i>弱</div>
+  <div class="lg-title" style="margin-top:10px">卡片色条</div>
+  <div class="lg-row"><i class="kb k-PC"></i>PC（玩家角色）</div>
+  <div class="lg-row"><i class="kb k-NPC"></i>NPC</div>
+  <div class="lg-row"><i class="kb k-BOSS"></i>BOSS</div>
+  <div class="lg-row"><i class="kb k-跨团"></i>跨团</div>
+  <div class="lg-row"><i class="kb k-KP"></i>KP / 主持人</div>
+</aside>
+
+<!-- ── 人物档案（覆盖层）────────────────────────────────────── -->
+<div class="dossier" id="dossier">
+  <div class="dos-left">
+    <div class="dos-art" id="dosArt"></div>
+    <div class="dos-name">
+      <div class="dos-id" id="dosId"></div>
+      <div class="dos-cn" id="dosCn"></div>
+      <div class="dos-en" id="dosEn"></div>
+    </div>
+  </div>
+  <div class="dos-right">
+    <button class="dos-close" id="dosClose">×</button>
+    <div class="dos-head">
+      <div class="dos-badge" id="dosBadge"></div>
+      <h2 id="dosTitle"></h2>
+      <div class="dos-sub" id="dosSub"></div>
+    </div>
+    <div class="dos-sec">
+      <h3>基础档案</h3>
+      <dl class="kv" id="dosKv"></dl>
+    </div>
+    <div class="dos-sec">
+      <h3>简介</h3>
+      <div class="dos-note" id="dosNote"></div>
+    </div>
+    <div class="dos-sec">
+      <h3>关系网（<span id="dosRelN">0</span>）</h3>
+      <div class="dos-rels" id="dosRels"></div>
+    </div>
+    <div class="dos-sec">
+      <h3>经历事件</h3>
+      <div class="dos-events" id="dosEvents"></div>
+    </div>
+    <div class="dos-foot" id="dosFoot"></div>
+  </div>
+</div>
+
+<div class="helpsheet" id="helpsheet">
+  <div class="hs-card">
+    <h3>操作说明</h3>
+    <ul>
+      <li class="only-mouse"><b>滚轮</b> 缩放 · <b>拖拽</b> 平移 · <b>双击空白</b> 复位</li>
+      <li class="only-touch"><b>单指拖动</b> 平移 · <b>双指捏合</b> 缩放 · <b>双击空白</b> 复位</li>
+      <li><b>点卡片</b> → 聚焦这个人，只留下关系最密切的几个人</li>
+      <li>聚焦状态下 <b>再点一次卡片</b>（或点「人物详情」）→ 打开<b>人物档案</b></li>
+      <li><b>拖动卡片</b> → 换到别的格子（会记住，别人加角色也不会挤走它）</li>
+      <li><b>双击卡片</b> → 把这一张复位到自动位置 ·
+          <b>⤾</b> → 一键复位全部手工排版 · <b>↶ 或 Ctrl+Z</b> → 撤销上一次拖动</li>
+      <li class="only-mouse"><b>ESC</b> 或左上角 <b>◀</b> 返回上一级</li>
+      <li class="only-touch">左上角 <b>◀</b> 返回上一级</li>
+      <li>右上角切换 <b>按团 / 按创作者 / 按类型</b> 三种分组视角</li>
+    </ul>
+    <div class="hs-wiki">
+      <button class="hs-link" data-navbtn="edit">✎ 编辑器</button>
+      <button class="hs-link" data-navbtn="tags">🏷 标签索引</button>
+      <button class="hs-link" data-navbtn="new">＋ 新建条目</button>
+      <button class="hs-link" data-navbtn="portal">☰ 门户</button>
+      <button class="hs-link" data-navbtn="resetlayout">⤾ 复位排版</button>
+      <button class="hs-link" data-navbtn="review">⚙ 提案箱管理</button>
+    </div>
+    <button class="hs-ok" id="hsOk">知道了</button>
+  </div>
+</div>
+
+<!-- ── wiki：搜索（Ctrl+K / `/`）─────────────────────────────── -->
+<div class="search" id="search">
+  <div class="se-panel">
+    <div class="se-head">
+      <span class="se-ico">🔍</span>
+      <input id="seInput" type="search" placeholder="搜索角色 / 别名 / 团 / 关系 / 事件…"
+             autocomplete="off" spellcheck="false">
+      <button class="se-close" id="seClose" title="关闭（Esc）">×</button>
+    </div>
+    <div class="se-list" id="seList"></div>
+    <div class="se-foot">
+      <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>↵</kbd> 打开 · <kbd>Esc</kbd> 关闭 · <kbd>Ctrl</kbd>+<kbd>K</kbd> 唤起
+    </div>
+  </div>
+</div>
+
+<!-- ── wiki：建议表单（修改 / 删除 / 新建，匿名提交进待审箱）── -->
+<div class="wiki-modal" id="wikiModal">
+  <div class="wm-card">
+    <div class="wm-head">
+      <h3 id="wmTitle">建议</h3>
+      <button class="wm-x" id="wmClose" title="关闭">×</button>
+    </div>
+    <div class="wm-desc" id="wmDesc"></div>
+    <div class="wm-fields" id="wmFields"></div>
+    <div class="wm-acts">
+      <button class="wb-btn" id="wmCancel">取消</button>
+      <button class="wb-btn ok" id="wmSubmit">提交建议</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── wiki：管理端审核页（#/review）────────────────────────── -->
+<div class="review" id="review">
+  <div class="rv-card">
+    <div class="rv-head">
+      <h3>提案箱 · 管理审核</h3>
+      <div class="rv-head-r">
+        <input id="rvToken" type="password" placeholder="管理员口令" autocomplete="off" spellcheck="false">
+        <button class="wb-btn" id="rvLoad">加载待审</button>
+        <button class="wb-btn" id="rvExport">导出补丁</button>
+        <button class="wm-x" id="rvClose" title="关闭">×</button>
+      </div>
+    </div>
+    <div class="rv-stats" id="rvStats">—</div>
+    <div class="rv-list" id="rvList"></div>
+  </div>
+</div>
+
+<!-- ── wiki：门户（#/portal）最近改动 / 新增条目 / 公告 ────────── -->
+<div class="portal" id="portal">
+  <div class="pt-card">
+    <div class="pt-head">
+      <h3>门户</h3>
+      <div class="pt-tabs">
+        <button class="wb-btn on" id="ptRecent">🕘 最近改动</button>
+        <button class="wb-btn" id="ptNew">＋ 新增条目</button>
+        <button class="wb-btn" id="ptAnn">📣 公告栏</button>
+      </div>
+      <div class="pt-head-r">
+        <input id="ptNick" type="text" placeholder="你的昵称（可选）" maxlength="24" autocomplete="off">
+        <button class="wm-x" id="ptClose" title="关闭">×</button>
+      </div>
+    </div>
+
+    <div class="pt-body">
+      <!-- ① 最近改动 -->
+      <div class="pt-view on" id="pvRecent"></div>
+
+      <!-- ② 新增条目（免口令） -->
+      <div class="pt-view" id="pvNew">
+        <div class="pt-form">
+          <div class="pt-sub">新建一个角色 <span class="pt-hint">不用口令；保存即生效，可在档案页继续补</span></div>
+          <label>ID（英文，唯一）<input id="pnId" placeholder="例如 tide_newguy" maxlength="64" autocomplete="off"></label>
+          <label>名字 <input id="pnName" placeholder="角色名" maxlength="80" autocomplete="off"></label>
+          <label>所属团 <select id="pnGroup"></select></label>
+          <label>身份 / 简介 <input id="pnIdentity" placeholder="例如 潮汐监狱·狱警" maxlength="200" autocomplete="off"></label>
+          <label>备注（可不填）<textarea id="pnNote" rows="3" placeholder="背景、事件、关系线索…"></textarea></label>
+          <label class="pt-file">立绘（可不填，之后也能补）
+            <input id="pnFile" type="file" accept="image/png,image/jpeg,image/webp">
+            <span id="pnFileName">（没选图）</span>
+          </label>
+          <button class="wb-btn on pt-submit" id="pnSubmit">创建</button>
+          <div class="pt-msg" id="pnMsg"></div>
+        </div>
+        <div class="pt-list" id="pnFeed"></div>
+      </div>
+
+      <!-- ③ 公告栏 -->
+      <div class="pt-view" id="pvAnn">
+        <div class="pt-form">
+          <div class="pt-sub">贴一条公告 <span class="pt-hint">不用口令；删公告才要</span></div>
+          <textarea id="ptAnnText" rows="3" placeholder="写点什么：本周开团时间 / 谁补了立绘 / 有角色要改…"></textarea>
+          <button class="wb-btn on pt-submit" id="ptAnnPost">发布</button>
+        </div>
+        <div class="pt-list" id="pnAnn"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── wiki：标签索引页（#/tags，支持多标签 AND/OR 筛选）─────── -->
+<div class="tagpage" id="tags">  <div class="tp-card">
+    <div class="tp-head">
+      <h3>标签索引</h3>
+      <div class="tp-head-r">
+        <input id="tpFilter" type="search" placeholder="过滤标签…" autocomplete="off" spellcheck="false">
+        <button class="wb-btn on" id="tpModeAnd" title="必须同时满足所有已选标签">全部满足</button>
+        <button class="wb-btn" id="tpModeOr" title="满足任一已选标签即可">任一满足</button>
+        <button class="wm-x" id="tpClose" title="关闭">×</button>
+      </div>
+    </div>
+    <div class="tp-sel" id="tpSel"></div>
+    <div class="tp-body">
+      <div class="tp-dims" id="tpDims"></div>
+      <div class="tp-res" id="tpRes"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 编辑器（#/edit[/<id>]）：卡面式「左立绘 · 右表单」，保存即生效 ── -->
+<div class="editor" id="editor">
+  <div class="ed-card">
+    <div class="ed-head">
+      <h3>编辑器 <span class="ed-live" id="edLive" title="数据来自服务器">●</span></h3>
+      <div class="ed-head-r">
+        <input id="edSearch" type="search" placeholder="搜索角色 / id / 别名 / 团…"
+               autocomplete="off" spellcheck="false">
+        <button class="wb-btn" id="edNew" title="创建一个新角色">＋ 新建角色</button>
+        <button class="wb-btn" id="edHist" title="谁在什么时候改了什么，可回滚">🕘 历史</button>
+        <button class="wb-btn" id="edPortal" title="门户：最近改动 / 新增条目 / 公告">☰ 门户</button>
+        <button class="wm-x" id="edClose" title="关闭（Esc）">×</button>
+      </div>
+    </div>
+    <div class="ed-lock" id="edLock" style="display:none"></div>
+    <div class="ed-body">
+      <div class="ed-list" id="edList"></div>
+      <div class="ed-form" id="edForm"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 版本历史面板 -->
+<div class="ed-histmodal" id="edHistory">  <div class="ed-histcard">
+    <div class="ed-histcard-h">
+      <h3>版本历史</h3>
+      <button class="wm-x" id="edHistClose" title="关闭">×</button>
+    </div>
+    <div class="ed-histlist" id="edHistList"></div>
+  </div>
+</div>
+
+<!-- 角色合并 -->
+<div class="ed-merge" id="edMerge">
+  <div class="ed-mergecard">
+    <div class="ed-merge-h">
+      <h3>合并角色</h3>
+      <button class="wm-x" id="edMergeClose" title="关闭">×</button>
+    </div>
+    <div class="ed-merge-body">
+      <div class="ed-merge-tip">
+        <b>合并会把被选中的角色并进当前这个</b>：
+        别名 / 出场团 / 标签 / 事件 / 属性做并集，<b>关系全部改指过来</b>（重复的自动去掉），
+        被并掉的那个随后消失。整个过程进版本历史，<b>随时可回滚</b>。
+      </div>
+      <input id="edMergeSearch" type="search" placeholder="搜索要并进来的角色（名字 / id / 别名）…"
+             autocomplete="off" spellcheck="false">
+      <div class="ed-merge-list" id="edMergeList"></div>
+      <div class="ed-merge-foot">
+        <span id="edMergePrev" class="ed-merge-prev">还没有选角色</span>
+        <button class="wb-btn danger" id="edMergeGo" disabled>合并进来</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<!-- wiki-boot：先取数据（优先服务器 /api/data，拿不到退回静态 data.js），再加载 app/wiki/editor -->
+<script src="wiki-boot.js"></script>
+</body>
+</html>

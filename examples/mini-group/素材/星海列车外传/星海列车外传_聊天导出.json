@@ -1,0 +1,140 @@
+{
+  "chatInfo": {
+    "name": "星海列车外传",
+    "type": "group"
+  },
+  "messages": [
+    {
+      "timestamp": 1768651200000,
+      "type": "text",
+      "sender": { "uid": "u_ex_blue", "name": "阿蓝" },
+      "content": { "text": "开个外传速通，规则同正传，今晚只跑两幕。" }
+    },
+    {
+      "timestamp": 1768651260000,
+      "type": "text",
+      "sender": { "uid": "u_ex_man", "name": "小满" },
+      "content": { "text": "我这次演弥月的同位体，可以吗" }
+    },
+    {
+      "timestamp": 1768651320000,
+      "type": "text",
+      "sender": { "uid": "u_ex_blue", "name": "阿蓝" },
+      "content": { "text": "可以，设定上她是同一个灵魂的另一个版本，记忆不同。" }
+    },
+    {
+      "timestamp": 1768651380000,
+      "type": "text",
+      "sender": { "uid": "u_ex_ya", "name": "老鸦" },
+      "content": { "text": "那我演铁鸦，直接默认我上辈子欠了临海一笔账。" }
+    },
+    {
+      "timestamp": 1768651440000,
+      "type": "text",
+      "sender": { "uid": "u_ex_blue", "name": "阿蓝" },
+      "content": { "text": "行。开局在候车厅，你们三个都没票。" }
+    },
+    {
+      "timestamp": 1768651500000,
+      "type": "audio",
+      "sender": { "uid": "u_ex_man", "name": "小满" },
+      "content": {}
+    },
+    {
+      "timestamp": 1768651560000,
+      "type": "text",
+      "sender": { "uid": "u_ex_man", "name": "小满" },
+      "content": { "text": "我搜售票机，看有没有残票。" }
+    },
+    {
+      "timestamp": 1768651620000,
+      "type": "text",
+      "sender": { "uid": "u_ex_blue", "name": "阿蓝" },
+      "content": { "text": "售票机里有一张半张的票，背面写着一行字：「别在无风站回头」。" }
+    },
+    {
+      "timestamp": 1768651680000,
+      "type": "text",
+      "sender": { "uid": "u_ex_ya", "name": "老鸦" },
+      "content": { "text": "我直接撕一半收口袋里，这算不算偷东西" }
+    },
+    {
+      "timestamp": 1768651740000,
+      "type": "text",
+      "sender": { "uid": "u_ex_blue", "name": "阿蓝" },
+      "content": { "text": "算，但你撕得很理直气壮。" }
+    },
+    {
+      "timestamp": 1768651800000,
+      "type": "text",
+      "sender": { "uid": "u_ex_man", "name": "小满" },
+      "content": { "text": "我们查一下候车厅的钟，看时间对不对。" }
+    },
+    {
+      "timestamp": 1768651860000,
+      "type": "text",
+      "sender": { "uid": "u_ex_blue", "name": "阿蓝" },
+      "content": { "text": "钟停在两点整。大厅里所有人的表都比它快七分钟。" }
+    },
+    {
+      "timestamp": 1768651920000,
+      "type": "text",
+      "sender": { "uid": "u_ex_ya", "name": "老鸦" },
+      "content": { "text": "七分钟。我需要在地图上量出这个距离。" }
+    },
+    {
+      "timestamp": 1768737600000,
+      "type": "text",
+      "sender": { "uid": "u_ex_blue", "name": "阿蓝" },
+      "content": { "text": "第二幕，列车已经开出去了，你们在餐车。" }
+    },
+    {
+      "timestamp": 1768737660000,
+      "type": "text",
+      "sender": { "uid": "u_ex_man", "name": "小满" },
+      "content": { "text": "餐车有没有乘客名单？我想找黑衣客的笔迹。" }
+    },
+    {
+      "timestamp": 1768737720000,
+      "type": "text",
+      "sender": { "uid": "u_ex_blue", "name": "阿蓝" },
+      "content": { "text": "有名单，最后一页的签名不是墨，是蚀刻上去的。" }
+    },
+    {
+      "timestamp": 1768737780000,
+      "type": "text",
+      "sender": { "uid": "u_ex_ya", "name": "老鸦" },
+      "content": { "text": "蚀刻的话，说明这人不怕留下痕迹，或者根本不在乎被认出来。" }
+    },
+    {
+      "timestamp": 1768737840000,
+      "type": "text",
+      "sender": { "uid": "u_ex_blue", "name": "阿蓝" },
+      "content": { "text": "签名下面压着一句台词：「上一次也是四个人，三个人下了车」。" }
+    },
+    {
+      "timestamp": 1768737900000,
+      "type": "text",
+      "sender": { "uid": "u_ex_man", "name": "小满" },
+      "content": { "text": "和正传那句话一样，我怀疑这就是同一个黑衣客。" }
+    },
+    {
+      "timestamp": 1768737960000,
+      "type": "text",
+      "sender": { "uid": "u_ex_blue", "name": "阿蓝" },
+      "content": { "text": "可以，这就是跨团线索，记进档案。" }
+    },
+    {
+      "timestamp": 1768738020000,
+      "type": "reply",
+      "sender": { "uid": "u_ex_ya", "name": "老鸦" },
+      "content": { "text": "（回复 小满）那这次是不是也会少一个人" }
+    },
+    {
+      "timestamp": 1768738080000,
+      "type": "text",
+      "sender": { "uid": "u_ex_blue", "name": "阿蓝" },
+      "content": { "text": "今晚到这儿。下回接终点站。" }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "description": "PL 称呼规范归一表(来源: 项目状态交接.md 规则 10/11, 主人已确认)",
+    "updated": "2026-09-11",
+    "note": "canonical 右侧是标准称呼; 提炼/入库一律用标准称呼, 禁止「xxx玩家」式代指"
+  },
+  "canonical": [
+    { "name": "pd", "aliases": ["月城凛绪玩家", "香瓜猫", "🐱香瓜猫", "pd小号", "阿蓝"] },
+    { "name": "菌羊", "aliases": ["凤樱姬玩家", "君羊", "俊阳", "军阳", "君阳"] },
+    { "name": "雪人", "aliases": ["砂狼真奈玩家", "钟松林", "似了", "砂狼真奈的旁白"] },
+    { "name": "宽", "aliases": ["薄荷糖", "浅仓真希", "浅仓真希玩家"] },
+    { "name": "往", "aliases": ["帷幕帘", "杨瑾宣", "白慕羽", "杨瑾宣玩家"] },
+    { "name": "ReGMeIoN", "aliases": ["牢昌", "主人", "kp_laochang", "老昌", "1251404045"] },
+    { "name": "DeIta", "aliases": ["DeIta玩家"] },
+    { "name": "叶珏", "aliases": ["叶珏玩家", "珏珏"] },
+    { "name": "阿翔", "aliases": ["阿翔玩家"] },
+    { "name": "卡尼三三", "aliases": ["卡尼三三玩家"] },
+    { "name": "牛爷", "aliases": ["牛爷玩家"] },
+    { "name": "俊松", "aliases": ["俊松玩家"] }
+  ],
+  "phonetic_merges": [
+    { "canonical": "菌羊", "variants": ["军阳", "君羊", "俊阳", "君阳"], "rule": "音近归一并标注「音近归一」" },
+    { "canonical": "杰克", "variants": ["捷克", "结刻", "捷象", "杰科"], "rule": "音近归一; 杰克是全宇宙核心, 必须并入 cross_jieke" }
+  ]
+}

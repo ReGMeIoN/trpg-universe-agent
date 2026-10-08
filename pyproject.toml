@@ -1,0 +1,31 @@
+[project]
+name = "trpg-universe-agent"
+version = "0.1.0"
+description = "TRPG-Universe Agent - 跑团宇宙数据管家 (v0.1 CLI)"
+requires-python = ">=3.11"
+dependencies = [
+    "typer>=0.12",
+    "pydantic>=2.6",
+    "PyYAML>=6.0",
+    "rich>=13.0",
+    "jsonschema>=4.20",
+    "requests>=2.31",
+    "python-docx>=1.1",
+]
+
+[project.optional-dependencies]
+asr = ["faster-whisper>=1.0"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+trpg-agent = "trpg_agent.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["trpg_agent*"]
+
+[tool.setuptools.package-data]
+trpg_agent = ["templates/*"]
