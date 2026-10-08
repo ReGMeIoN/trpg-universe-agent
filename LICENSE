@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 TRPG-Universe Agent contributors
+Copyright (c) 2026 ReGMeIoN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,15 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-────────────────────────────────────────────────────────────────────────
-注意 / NOTICE
-
-本仓库的**代码与文档**以 MIT 协议开源。
-但仓库**不包含**以下内容，它们不属于本协议授权范围，版权归各自作者所有：
-
-  · 跑团录音、QQ/聊天导出等原始素材
-  · 玩家自撰的角色卡正文与卡面配图（PC 立绘）
-  · NovelAI 生成的角色立绘 / CG / 封面
-
-使用者需自行准备素材，并自行确保其拥有相应使用权。

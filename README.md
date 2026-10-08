@@ -167,3 +167,11 @@ $env:PYTHONPATH = (Resolve-Path .boot).Path
 
 > 副作用提醒：踩坑过程中用 0o700 建出来的空目录（`.tmp` 下若干）在本机**删不掉**（连 `rd /s /q`
 > 都是 Access denied）。它们为空且被 `.gitignore` 忽略，不影响功能。新的临时目录一律用 0o777。
+
+## 许可 / License
+
+**代码与文档**：[MIT](LICENSE) © 2026 ReGMeIoN
+
+⚠️ 仓库**不含**跑团录音、聊天导出、玩家角色卡正文与配图、NovelAI 生成图 ——
+这些内容的版权归各玩家与画师所有，**不在本仓库授权范围内**。
+详见 [NOTICE](NOTICE)。
