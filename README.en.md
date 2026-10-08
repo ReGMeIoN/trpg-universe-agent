@@ -1,4 +1,4 @@
-# TRPG-Universe Agent 🐳
+# TRPG-Universe Agent
 
 > Turn session recordings and chat exports from tabletop RPG campaigns into a
 > **searchable, browsable, publishable** character-relationship archive.
